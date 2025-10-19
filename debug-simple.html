@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Simple | Beresta</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <div id="debug-info" style="position: fixed; top: 10px; right: 10px; background: white; padding: 10px; border: 1px solid #ccc; z-index: 9999; font-size: 12px;">
+    <div>Loading...</div>
+  </div>
+
+  <!-- Загружаемый хедер -->
+  <div id="header-container"></div>
+
+  <main class="main-content" style="padding-top: 100px;">
+    <div class="page-wrapper">
+      <h1>Debug Simple Page</h1>
+      <p>This page shows debug information in the top-right corner.</p>
+      <p>Check if the "App" link appears in the menu above.</p>
+    </div>
+  </main>
+
+  <script>
+    const debugInfo = document.getElementById('debug-info');
+    
+    function updateDebug(message) {
+      debugInfo.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+    }
+    
+    updateDebug('Page loaded');
+  </script>
+  
+  <script src="/js/i18n.js" onload="updateDebug('i18n.js loaded')" onerror="updateDebug('i18n.js ERROR')"></script>
+  <script src="/js/loadComponents.js" onload="updateDebug('loadComponents.js loaded')" onerror="updateDebug('loadComponents.js ERROR')"></script>
+  
+  <script>
+    // Проверяем через 2 секунды
+    setTimeout(() => {
+      const header = document.querySelector('.main-header');
+      const appLink = document.querySelector('a[href="/app/"]');
+      
+      if (header) {
+        updateDebug('Header found');
+      } else {
+        updateDebug('Header NOT found');
+      }
+      
+      if (appLink) {
+        updateDebug('App link found: ' + appLink.textContent);
+      } else {
+        updateDebug('App link NOT found');
+      }
+      
+      // Проверяем все ссылки в меню
+      const allLinks = document.querySelectorAll('.nav-links a');
+      updateDebug('Total menu links: ' + allLinks.length);
+      allLinks.forEach((link, index) => {
+        updateDebug('Link ' + index + ': ' + link.textContent + ' -> ' + link.href);
+      });
+    }, 2000);
+  </script>
+</body>
+</html>

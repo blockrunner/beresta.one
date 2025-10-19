@@ -3,7 +3,26 @@ body {
 }
 
 .main-container {
-    max-width: 350px
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Двухколоночная верстка */
+.two-column-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.left-column {
+    flex: 1;
+    min-width: 0;
+}
+
+.right-column {
+    flex: 1;
+    min-width: 0;
 }
 
 .text-input-container .text-input textarea {
@@ -578,6 +597,53 @@ textarea#logs {
 
 .modal-content ul li {
     padding: 5px 0
+}
+
+/* Адаптивные стили для двухколоночной верстки */
+@media (max-width: 1024px) {
+    .two-column-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .left-column,
+    .right-column {
+        flex: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 0 10px;
+    }
+    
+    .two-column-layout {
+        gap: 15px;
+    }
+    
+    .matrix-container {
+        justify-content: center;
+    }
+    
+    .text-input-container .text-input textarea {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .matrix-input-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .parameters-container {
+        font-size: 12px;
+    }
+    
+    .parameters-container .sets-container {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
 }
 
 /* Стили для мобильного меню */

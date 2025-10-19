@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>Debug App Integration</h1>
+    
+    <div id="debug-output"></div>
+    
+    <script>
+        const debugOutput = document.getElementById('debug-output');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `debug-info ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            debugOutput.appendChild(div);
+        }
+        
+        async function testComponents() {
+            log('Starting component loading test...');
+            
+            try {
+                // Test 1: Check if loadTranslations function exists
+                if (typeof loadTranslations === 'function') {
+                    log('✓ loadTranslations function found', 'success');
+                } else {
+                    log('✗ loadTranslations function not found', 'error');
+                }
+                
+                // Test 2: Try to load translations
+                if (typeof loadTranslations === 'function') {
+                    await loadTranslations();
+                    log('✓ Translations loaded successfully', 'success');
+                }
+                
+                // Test 3: Check if header component loads
+                const headerResponse = await fetch('/components/header.html');
+                if (headerResponse.ok) {
+                    const headerHtml = await headerResponse.text();
+                    if (headerHtml.includes('nav.app')) {
+                        log('✓ Header contains App link', 'success');
+                    } else {
+                        log('✗ Header does not contain App link', 'error');
+                    }
+                } else {
+                    log('✗ Failed to load header component', 'error');
+                }
+                
+                // Test 4: Check if footer component loads
+                const footerResponse = await fetch('/components/footer.html');
+                if (footerResponse.ok) {
+                    log('✓ Footer component loads successfully', 'success');
+                } else {
+                    log('✗ Failed to load footer component', 'error');
+                }
+                
+                // Test 5: Check if locale files exist
+                const ruResponse = await fetch('/locales/ru.json');
+                if (ruResponse.ok) {
+                    log('✓ Russian locale file exists', 'success');
+                } else {
+                    log('✗ Russian locale file not found', 'error');
+                }
+                
+                const enResponse = await fetch('/locales/en.json');
+                if (enResponse.ok) {
+                    log('✓ English locale file exists', 'success');
+                } else {
+                    log('✗ English locale file not found', 'error');
+                }
+                
+            } catch (error) {
+                log(`✗ Error during testing: ${error.message}`, 'error');
+            }
+        }
+        
+        // Load the scripts and test
+        document.addEventListener('DOMContentLoaded', async () => {
+            log('DOM loaded, starting tests...');
+            
+            // Load the scripts
+            const script1 = document.createElement('script');
+            script1.src = '/js/i18n.js';
+            script1.onload = () => {
+                log('✓ i18n.js loaded', 'success');
+                testComponents();
+            };
+            script1.onerror = () => {
+                log('✗ Failed to load i18n.js', 'error');
+            };
+            document.head.appendChild(script1);
+            
+            const script2 = document.createElement('script');
+            script2.src = '/js/loadComponents.js';
+            script2.onload = () => {
+                log('✓ loadComponents.js loaded', 'success');
+            };
+            script2.onerror = () => {
+                log('✗ Failed to load loadComponents.js', 'error');
+            };
+            document.head.appendChild(script2);
+        });
+    </script>
+</body>
+</html>

@@ -6,7 +6,7 @@ const path = require('path');
 const url = require('url');
 
 const PORT = process.env.PORT || 8100;
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || '0.0.0.0';
 
 // MIME types
 const mimeTypes = {
@@ -37,7 +37,25 @@ const server = http.createServer((req, res) => {
     pathname = '/index.html';
   }
   
-  const filePath = path.join(__dirname, pathname);
+  // Handle clean URLs (remove trailing slash and add .html if needed)
+  let filePath = path.join(__dirname, pathname);
+  
+  // Check if it's a clean URL (no extension and ends with /)
+  if (pathname.endsWith('/') && pathname !== '/') {
+    // Remove trailing slash and try to find index.html in that directory
+    const cleanPath = pathname.slice(0, -1);
+    filePath = path.join(__dirname, cleanPath, 'index.html');
+  } else if (!path.extname(pathname) && pathname !== '/') {
+    // No extension, try to find index.html in pages directory
+    const pagesPath = path.join(__dirname, 'pages', pathname.slice(1), 'index.html');
+    if (fs.existsSync(pagesPath)) {
+      filePath = pagesPath;
+    } else {
+      // Try to find .html file with same name
+      filePath = path.join(__dirname, pathname + '.html');
+    }
+  }
+  
   const ext = path.extname(filePath).toLowerCase();
   const mimeType = mimeTypes[ext] || 'application/octet-stream';
   
