@@ -46,7 +46,7 @@ jobs:
         use_insecure_cipher: true
         script: |
           # Create directory if it doesn't exist (user has access only to public_html folder)
-          mkdir -p ${{ secrets.SSH_REMOTE_PATH || 'public_html' }}
+          mkdir -p ${{ secrets.SSH_REMOTE_PATH || '.' }}
           
     # Sync files via rsync - requires SSH secrets
     - name: Sync files via rsync
@@ -79,11 +79,11 @@ jobs:
           --exclude='.env*' \
           --exclude='DEPLOYMENT.md' \
           --exclude='GITHUB_SETUP.md' \
-          ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || 'public_html' }}
+          ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || '.' }}
           
         # Debug: Verify files were uploaded
         echo "Verifying uploaded files..."
-        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls -la ${{ secrets.SSH_REMOTE_PATH || 'public_html' }}"
+        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls -la ${{ secrets.SSH_REMOTE_PATH || '.' }}"
           
     - name: Notify deployment status
       if: always()

@@ -25,7 +25,7 @@
 
 #### SSH_REMOTE_PATH (опционально)
 - **Name**: `SSH_REMOTE_PATH`
-- **Value**: `public_html`
+- **Value**: `.` (точка означает текущую папку)
 
 ## Проверка настройки
 
