@@ -43,6 +43,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASS }}
         port: ${{ secrets.SSH_PORT || 22 }}
+        use_insecure_cipher: true
         script: |
           # Create directory if it doesn't exist (user has access only to public_html folder)
           mkdir -p ${{ secrets.SSH_REMOTE_PATH || 'public_html' }}
@@ -57,6 +58,7 @@ jobs:
         
         # Sync files to server
         sshpass -e rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
           --exclude='.git*' \
           --exclude='.github/' \
           --exclude='.vscode/' \
