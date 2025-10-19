@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  // Сначала загружаем переводы
+  await loadTranslations();
+  
   // Загрузка шапки
   fetch('/components/header.html')
     .then(response => response.text())
