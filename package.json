@@ -4,8 +4,8 @@
   "description": "Official website for Beresta project - innovative sensory feedback technology",
   "main": "index.html",
   "scripts": {
-    "dev": "npx http-server -p 8000 -o",
-    "start": "npx http-server -p 8000",
+    "dev": "npx http-server -p 8100 -o",
+    "start": "npx http-server -p 8100",
     "build": "echo 'Static site - no build required'",
     "test": "echo 'No tests specified'",
     "lint": "echo 'No linting configured'"

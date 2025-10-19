@@ -8,7 +8,7 @@ if ! command -v node &> /dev/null; then
     echo "Node.js is not installed. Please install Node.js from https://nodejs.org/"
     echo
     echo "Alternative: Using Python HTTP server..."
-    python3 -m http.server 8000
+    python3 -m http.server 8100
     exit 1
 fi
 

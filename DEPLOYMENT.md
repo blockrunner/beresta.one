@@ -76,16 +76,16 @@ npm start
 node dev-server.js
 ```
 
-Сервер будет доступен по адресу: http://localhost:8000
+Сервер будет доступен по адресу: http://localhost:8100
 
 ### Альтернативные способы запуска
 
 ```bash
 # Python HTTP сервер
-python -m http.server 8000
+python -m http.server 8100
 
 # PHP встроенный сервер
-php -S localhost:8000
+php -S localhost:8100
 
 # Live Server (VS Code extension)
 # Установите расширение "Live Server" и нажмите "Go Live"

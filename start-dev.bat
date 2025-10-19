@@ -8,7 +8,7 @@ if %errorlevel% neq 0 (
     echo Node.js is not installed. Please install Node.js from https://nodejs.org/
     echo.
     echo Alternative: Using Python HTTP server...
-    python -m http.server 8000
+    python -m http.server 8100
     goto :end
 )
 

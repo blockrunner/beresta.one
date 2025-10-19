@@ -24,10 +24,10 @@ Beresta - это проект, направленный на создание и
 
 ```bash
 # Простой HTTP сервер (Python)
-python -m http.server 8000
+python -m http.server 8100
 
 # Или с помощью Node.js
-npx http-server -p 8000
+npx http-server -p 8100
 
 # Или с помощью Live Server (VS Code extension)
 ```
