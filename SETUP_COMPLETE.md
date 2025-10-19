@@ -33,7 +33,7 @@
 - **SSH_HOST**: `berisk.beget.tech`
 - **SSH_USER**: `berisk_beresta`
 - **SSH_PASS**: `Q13123213123Qg`
-- **SSH_REMOTE_PATH**: `/home/berisk/beresta.one/public_html`
+- **SSH_REMOTE_PATH**: `public_html`
 
 ### 2. Проверьте деплой
 После настройки секретов:

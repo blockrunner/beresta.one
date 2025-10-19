@@ -25,7 +25,7 @@
 
 #### SSH_REMOTE_PATH (опционально)
 - **Name**: `SSH_REMOTE_PATH`
-- **Value**: `/home/berisk/beresta.one/public_html`
+- **Value**: `public_html`
 
 ## Проверка настройки
 

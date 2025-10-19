@@ -44,8 +44,8 @@ jobs:
         password: ${{ secrets.SSH_PASS }}
         port: ${{ secrets.SSH_PORT || 22 }}
         script: |
-          # Create directory if it doesn't exist
-          mkdir -p ${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}
+          # Create directory if it doesn't exist (user has access only to public_html folder)
+          mkdir -p ${{ secrets.SSH_REMOTE_PATH || 'public_html' }}
           
     # Sync files via rsync - requires SSH secrets
     - name: Sync files via rsync
@@ -68,7 +68,7 @@ jobs:
           --exclude='.env*' \
           --exclude='DEPLOYMENT.md' \
           --exclude='GITHUB_SETUP.md' \
-          ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}/
+          ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || 'public_html' }}/
           
     - name: Notify deployment status
       if: always()
