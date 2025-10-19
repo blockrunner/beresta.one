@@ -1,0 +1,33 @@
+{
+  "name": "beresta-website",
+  "version": "1.0.0",
+  "description": "Official website for Beresta project - innovative sensory feedback technology",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server -p 8000 -o",
+    "start": "npx http-server -p 8000",
+    "build": "echo 'Static site - no build required'",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linting configured'"
+  },
+  "keywords": [
+    "beresta",
+    "sensory-feedback",
+    "tactile-interface",
+    "technology",
+    "website"
+  ],
+  "author": "Beresta Team",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/beresta-website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/beresta-website/issues"
+  },
+  "homepage": "https://your-username.github.io/beresta-website"
+}

@@ -1,0 +1,97 @@
+name: Deploy to Hosting
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies (if package.json exists)
+      run: |
+        if [ -f package.json ]; then
+          npm ci
+        fi
+      continue-on-error: true
+      
+    - name: Build project (if build script exists)
+      run: |
+        if [ -f package.json ] && npm run build --if-present; then
+          echo "Build completed"
+        else
+          echo "No build script found, using static files"
+        fi
+      continue-on-error: true
+      
+    - name: Deploy to hosting via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/.github/**
+          **/.vscode/**
+          **/README.md
+          **/.gitignore
+          **/package*.json
+          **/yarn.lock
+          **/.env*
+          
+    - name: Deploy to hosting via SFTP (alternative)
+      if: ${{ secrets.SFTP_SERVER }}
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:
+        server: ${{ secrets.SFTP_SERVER }}
+        username: ${{ secrets.SFTP_USERNAME }}
+        password: ${{ secrets.SFTP_PASSWORD }}
+        local_path: './*'
+        remote_path: ${{ secrets.SFTP_REMOTE_PATH || '/' }}
+        exclude: |
+          .git*
+          .github/
+          .vscode/
+          node_modules/
+          README.md
+          .gitignore
+          package*.json
+          yarn.lock
+          .env*
+          
+    - name: Deploy to hosting via SSH (alternative)
+      if: ${{ secrets.SSH_HOST }}
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT || 22 }}
+        script: |
+          cd ${{ secrets.SSH_REMOTE_PATH || '/var/www/html' }}
+          git pull origin main
+          # Add any additional deployment commands here
+          
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+        fi
