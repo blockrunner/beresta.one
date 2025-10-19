@@ -35,46 +35,9 @@ jobs:
         fi
       continue-on-error: true
       
-    - name: Deploy to hosting via FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/node_modules/**
-          **/.github/**
-          **/.vscode/**
-          **/README.md
-          **/.gitignore
-          **/package*.json
-          **/yarn.lock
-          **/.env*
-          
-    - name: Deploy to hosting via SFTP (alternative)
-      if: ${{ secrets.SFTP_SERVER }}
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-      with:
-        server: ${{ secrets.SFTP_SERVER }}
-        username: ${{ secrets.SFTP_USERNAME }}
-        password: ${{ secrets.SFTP_PASSWORD }}
-        local_path: './*'
-        remote_path: ${{ secrets.SFTP_REMOTE_PATH || '/' }}
-        exclude: |
-          .git*
-          .github/
-          .vscode/
-          node_modules/
-          README.md
-          .gitignore
-          package*.json
-          yarn.lock
-          .env*
-          
+    # Deploy via SSH - requires SSH_HOST, SSH_USER, SSH_PASS secrets
     - name: Deploy to hosting via SSH
+      if: ${{ secrets.SSH_HOST }}
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -82,11 +45,12 @@ jobs:
         password: ${{ secrets.SSH_PASS }}
         port: ${{ secrets.SSH_PORT || 22 }}
         script: |
-          cd ${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}
           # Create directory if it doesn't exist
           mkdir -p ${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}
           
+    # Sync files via rsync - requires SSH secrets
     - name: Sync files via rsync
+      if: ${{ secrets.SSH_HOST }}
       env:
         SSHPASS: ${{ secrets.SSH_PASS }}
       run: |
