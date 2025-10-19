@@ -1,0 +1,20 @@
+{
+  "nav": {
+    "technology": "Technology",
+    "applications": "Applications",
+    "prototype": "Prototype",
+    "app": "App",
+    "team": "Team",
+    "participation": "Participation"
+  },
+  "footer": {
+    "about": "About Project",
+    "about_text": "Beresta — next-generation wearable interface based on sensory substitution",
+    "contact": "Contacts",
+    "navigation": "Navigation",
+    "roadmap": "Roadmap",
+    "whitepaper": "White Paper",
+    "follow": "Follow Project Development",
+    "copyright": "© 2025 Beresta Project. All rights reserved."
+  }
+}

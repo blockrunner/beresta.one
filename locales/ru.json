@@ -1,0 +1,20 @@
+{
+  "nav": {
+    "technology": "Технология",
+    "applications": "Применение",
+    "prototype": "Прототип",
+    "app": "App",
+    "team": "Команда",
+    "participation": "Участие"
+  },
+  "footer": {
+    "about": "О проекте",
+    "about_text": "Береста — носимый интерфейс нового поколения на основе сенсорного замещения",
+    "contact": "Контакты",
+    "navigation": "Навигация",
+    "roadmap": "Дорожная карта",
+    "whitepaper": "White Paper",
+    "follow": "Следите за развитием проекта",
+    "copyright": "© 2025 Beresta Project. Все права защищены."
+  }
+}
