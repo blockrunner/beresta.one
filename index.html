@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beresta — киберимплант без скальпеля</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="preload" href="/components/header.html" as="fetch">
+  <link rel="preload" href="/components/footer.html" as="fetch">
+</head>
+<body>
+  <!-- Загружаемый хедер -->
+  <div id="header-container"></div>
+
+  <main class="main-content">
+    <div class="page-wrapper">
+      <!-- Hero-секция -->
+      <section class="hero-section">
+        <div class="hero-inner">
+          <div class="hero-content">
+             <h1 class="hero-title">Киберимплант без скальпеля</h1>
+          <p class="hero-subtitle">Расширяй границы восприятия с помощью нейропластичности мозга, сенсорного замещения и ИИ.</p>
+            <div class="hero-actions">
+             <a href="#prototype" class="btn btn-primary">Лист ожидания</a>
+            <a href="/participation.html" class="btn btn-secondary">Участвовать в проекте</a>
+            </div>
+          </div>
+          <div class="hero-media">
+            <model-viewer src="/models/beresta.glb" alt="3D модель Бересты" camera-controls auto-rotate ar fallback-src="/img/device-3d.png" style="width:100%; height:500px; background:#111; border-radius:10px;"></model-viewer>
+          </div>
+        </div>
+      </section>
+
+      <!-- Что такое Береста -->
+      <section class="intro-section" style="background: url('/img/intro-bg.png') center/cover no-repeat;">
+        <h2 class="section-title" style="text-align: left;">Что такое Береста?</h2>
+        <p class="section-description">Носимое устройство, дополняющее восприятие с помощью<br>тактильных ощущений и AI-интерпретации окружающего мира.</p>
+        <a href="/technology.html" class="btn btn-secondary">Подробнее о технологии</a>
+      </section>
+      
+      <!-- Чувствуй больше -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Чувствуй больше. То, что другие не могут.</h2>
+        <p>Вибротактильные паттерны, перевод визуальных и аудио сигналов в кожу. Реакция на движение, магнитные поля, сигналы других устройств.</p>
+      </section>
+
+      <!-- Как это работает -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Как это работает?</h2>
+        <div class="steps-container">
+          <div class="step"><img src="/img/step1-icon.png" alt="Получение данных"><h3>Получение данных</h3><p>Браслет получает изображения, текст или звук с устройства</p></div>
+          <div class="step"><img src="/img/step2-icon.png" alt="Обработка ИИ"><h3>Обработка ИИ</h3><p>ИИ преобразует данные в вибрационные паттерны</p></div>
+          <div class="step"><img src="/img/step3-icon.png" alt="Сенсорное восприятие"><h3>Обучение восприятию</h3><p>Мозг учится распознавать сигналы как зрительную информацию</p></div>
+        </div>
+        <div style="text-align: center; margin-top: 60px;">
+          <a href="/technology.html" class="btn btn-secondary">Подробнее о технологии</a>
+        </div>
+      </section>
+
+        <!-- Научное обоснование -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Научный фундамент</h2>
+        <p>🧬 «Мозг способен обрабатывать новую сенсорную информацию и создавать новые каналы восприятия — это доказано на примерах тактильной визуализации и магнитной ориентации у человека».
+→ Источник: Bach-y-Rita et al., Nature, 1969</p>
+        <p>🧠 «Обучение новому чувству — это навык, требующий времени и внимания, но со временем ощущается как "естественное чувство".»
+→ Источник: Neuroplasticity and Sensory Substitution, 2003</p>
+      <div style="text-align: center; margin-top: 60px;">
+          <a href="/technology.html#science" class="btn btn-secondary">Больше статей</a>
+        </div>
+      </section>
+
+      <!-- Применение -->
+      <section class="applications-section">
+        <h2 class="section-title">Где применяется Береста?</h2>
+        <div class="application-cards">
+          <div class="application-card">
+            <img src="/img/app-navigation.png" alt="Навигация">
+            <h3>Навигация</h3>
+            <p>Тактильные подсказки направления и расстояния позволяют перемещаться без необходимости смотреть в экран. Особенно полезно для ситуаций, где важна внимательность: вождения, спорта, туризма.</p>
+          </div>
+          <div class="application-card">
+            <img src="/img/app-notifications.jpg" alt="Уведомления">
+            <h3>Уведомления</h3>
+            <p>Береста передаёт важные сигналы с мессенджеров, вызовов или приложений прямо на кожу, не отвлекая от текущей деятельности. Уровень срочности различается по паттерну.</p>
+          </div>
+          <div class="application-card">
+            <img src="/img/app-sports.jpg" alt="Спорт и тренировки">
+            <h3>Спорт и тренировки</h3>
+            <p>Передача команд тренера, ритма или состояния организма в реальном времени позволяет лучше контролировать технику и достигать лучших результатов без визуальных отвлечений.</p>
+          </div>
+          <div class="application-card">
+            <img src="/img/app-music.jpg" alt="Музыка">
+            <h3>Музыка</h3>
+            <p>Погружение в музыку через вибрации — это не просто альтернатива аудио, а новый способ переживания звука телом. Особенно интересно для саунд-дизайнеров и пользователей с нарушением слуха.</p>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 60px; margin-bottom: 80px;">
+        <a href="/applications.html" class="btn btn-secondary">Все сценарии</a>
+        </div>
+      </section>
+
+      <!-- Модульная архитектура -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Модульная архитектура</h2>
+        <p>Береста — это не одно устройство. Это система.</p>
+        <p>Мы разработали модульную технологию, где каждый сенсор и актюатор подключается независимо. Это позволяет собирать Бересту в нужной форме: для руки, шеи, пояса, ног или груди.
+Подходит для любого телосложения, любых задач, любого уровня чувствительности.</p>
+        <p>Интерактивная схема с зонами тела</p>
+        
+      </section>
+
+      <!-- Технология двух сигналов -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Технология двух сигналов</h2>
+        <p>Широкий диапазон ощущений</p>
+        <p>Стимуляция поверхностных и глубоких рецепторов</p>
+        <p>Эффект присутствия и телесной памяти</p>
+        <p>Возможность передавать сложные сигналы — от импульсов до «эмоций»</p>
+        
+      </section>
+
+      <!-- Прототип -->
+      <section id="prototype" class="prototype-section">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px; margin-bottom: 80px;">
+          <div style="flex: 1; min-width: 300px;">
+            <h2 class="section-title" style="text-align: left;">Действующий прототип</h2>
+            <p>Береста 3.2 — рабочий прототип с 128 вибромоторами и веб-интерфейсом управления. Мы продолжаем разработку версии 4.0 — компактной, лёгкой и адаптивной.</p>
+            <p>Фото и видео-демонстрация текущей версии устройства.</p>
+            <a href="/prototype.html" class="btn btn-primary" style="margin-top: 20px;">Технические детали</a>
+          </div>
+          <div style="flex: 1; min-width: 300px;">
+            <img src="/img/prototype.jpg" alt="Фото прототипа" style="width: 100%; border-radius: 10px;">
+          </div>
+        </div>
+      </section>
+
+       <!-- Для разработчиков -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Открытая платформа</h2>
+        <p>SDK, Web Bluetooth API, open hardware specs. Возможность создавать свои сценарии и паттерны.</p>     
+      </section>
+
+      <!-- Примерка -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">AR примерка</h2>
+        <p>Возможность «примерить» устройство на руке/теле в дополненной реальности через смартфон.</p>
+        
+      </section>
+
+      <!-- Участие -->
+      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+        <h2 class="section-title" style="text-align: center;">Прими участие в проекте</h2>
+        <p>Стать инвестором</p>
+        <p>Поддержка на раннем этапе</p>
+        <p>Присоединиться к тест-группе</p>
+        <p>Присоединиться к команде</p>
+        <p>Вступить в сообщество</p>
+        <p>Другие форматы участия - куда обращаться</p>
+        <div style="text-align: center; margin-top: 60px; margin-bottom: 80px;">
+        <a href="/participation.html" class="btn btn-secondary">Участвовать в проекте</a>
+        </div>
+      </section>
+
+       
+
+      <!-- Сообщество 
+      <section class="community-section" style="text-align: center; margin-bottom: 100px;">
+        <h2 class="section-title">Следите за развитием проекта</h2>
+        <p>Мы делимся прогрессом в X и Telegram</p>
+        <div class="social-icons">
+          <a href="https://t.me/berestadotone" aria-label="Telegram"><img src="/img/telegram.png" alt="Telegram"></a>
+          <a href="https://x.com/berestadotone" aria-label="X"><img src="/img/x.png" alt="X"></a>
+        </div>
+      </section>
+    </div>
+  </main>-->
+
+  <!-- Загружаемый футер -->
+  <div class="page-wrapper">
+    <div id="footer-container"></div>
+  </div>
+
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script src="/js/loadComponents.js" defer></script>
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</body>
+</html>
