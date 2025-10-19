@@ -85,4 +85,5 @@ public
 tmp/
 temp/
 
-
+# Test and debug folders
+test-and-debug/
