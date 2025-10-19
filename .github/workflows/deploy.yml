@@ -74,18 +74,39 @@ jobs:
           yarn.lock
           .env*
           
-    - name: Deploy to hosting via SSH (alternative)
-      if: ${{ secrets.SSH_HOST }}
+    - name: Deploy to hosting via SSH
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASS }}
         port: ${{ secrets.SSH_PORT || 22 }}
         script: |
-          cd ${{ secrets.SSH_REMOTE_PATH || '/var/www/html' }}
-          git pull origin main
-          # Add any additional deployment commands here
+          cd ${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}
+          # Create directory if it doesn't exist
+          mkdir -p ${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}
+          
+    - name: Sync files via rsync
+      env:
+        SSHPASS: ${{ secrets.SSH_PASS }}
+      run: |
+        # Install sshpass for password authentication
+        sudo apt-get update && sudo apt-get install -y sshpass rsync
+        
+        # Sync files to server
+        sshpass -e rsync -avz --delete \
+          --exclude='.git*' \
+          --exclude='.github/' \
+          --exclude='.vscode/' \
+          --exclude='node_modules/' \
+          --exclude='README.md' \
+          --exclude='.gitignore' \
+          --exclude='package*.json' \
+          --exclude='yarn.lock' \
+          --exclude='.env*' \
+          --exclude='DEPLOYMENT.md' \
+          --exclude='GITHUB_SETUP.md' \
+          ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || '/home/berisk/beresta.one/public_html' }}/
           
     - name: Notify deployment status
       if: always()
