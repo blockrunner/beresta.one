@@ -18,10 +18,21 @@ Beresta - это проект, направленный на создание и
 - `/whitepaper/` - Белая книга
 - `/participation/` - Участие в проекте
 - `/prototype/` - Прототип
+- `/app/` - Веб-приложение для управления устройством
 
 ### Файловая структура
 ```
 public_html/
+├── app/                      # Веб-приложение для управления устройством
+│   ├── api/                  # Node.js backend API
+│   │   ├── server.js         # Express сервер
+│   │   ├── routes/           # API роуты
+│   │   ├── middleware/       # Middleware (валидация, rate limiting)
+│   │   ├── utils/            # Утилиты (работа с файлами)
+│   │   └── data/             # Данные (queue, logs)
+│   ├── css/                  # Стили приложения
+│   ├── js/                   # JavaScript приложения
+│   └── index.html            # Главная страница приложения
 ├── pages/                    # Новые страницы в папках
 │   ├── applications/index.html
 │   ├── technology/index.html
@@ -29,27 +40,61 @@ public_html/
 │   └── ...
 ├── *.html                    # Старые файлы (для совместимости)
 ├── components/               # Переиспользуемые компоненты
-├── css/                      # Стили
-├── js/                       # JavaScript
+├── css/                      # Стили сайта
+├── js/                       # JavaScript сайта
 ├── img/                      # Изображения
 ├── locales/                  # Локализация
-└── models/                   # 3D модели
+├── models/                   # 3D модели
+├── config/                   # Конфигурация
+│   ├── dev.config.js         # Конфигурация разработки
+│   └── prod.config.js        # Конфигурация продакшена
+└── shared/                   # Общие ресурсы
+    ├── models/
+    └── img/
 ```
 
 ## Локальная разработка
 
-Для запуска локального сервера разработки:
+### Установка зависимостей
 
 ```bash
-# Рекомендуемый способ (с поддержкой красивых URL)
-node dev-server.js
+# Установка основных зависимостей
+npm install
 
-# Или через npm
+# Установка зависимостей API
+npm run install:api
+
+# Копирование конфигурации
+cp env.example .env
+```
+
+### Запуск сервера разработки
+
+```bash
+# Запуск всего проекта (сайт + API)
 npm run dev
 
-# Альтернативные способы
-npx http-server -p 8100
-python -m http.server 8100
+# Запуск только сайта
+npm run dev:site
+
+# Запуск только API
+npm run dev:api
+
+# Альтернативный способ (старый dev-server)
+node dev-server.js
+```
+
+### Сборка для продакшена
+
+```bash
+# Сборка всего проекта
+npm run build
+
+# Сборка только сайта
+npm run build:site
+
+# Сборка только API
+npm run build:api
 ```
 
 ### Тестирование красивых URL
@@ -67,22 +112,49 @@ python -m http.server 8100
 
 ## Технологии
 
-- HTML5
-- CSS3
-- JavaScript
+### Frontend
+- HTML5, CSS3, JavaScript (ES6+)
+- Vite (сборка и dev-сервер)
 - Responsive Design
 - Clean URLs (красивые URL без расширений)
 - Модульная архитектура
 - Компонентная система
 
+### Backend
+- Node.js + Express.js
+- RESTful API
+- Валидация данных (express-validator)
+- Rate limiting
+- CORS поддержка
+- Файловое хранилище (JSON)
+
+### Инструменты разработки
+- ESLint (линтинг)
+- Prettier (форматирование)
+- Concurrently (запуск нескольких серверов)
+- Nodemon (автоперезагрузка API)
+
 ## Новые возможности
 
+### Современная архитектура
+- ✅ Node.js backend с Express.js
+- ✅ RESTful API с валидацией
+- ✅ Rate limiting и безопасность
+- ✅ Файловое хранилище данных
+- ✅ Конфигурация через environment variables
+
 ### Красивые URL
-Проект теперь поддерживает современные URL без расширений `.html`:
+Проект поддерживает современные URL без расширений `.html`:
 - ✅ SEO-дружественные URL
 - ✅ Лучшее кэширование
 - ✅ Готовность к масштабированию
 - ✅ Обратная совместимость
+
+### Инструменты разработки
+- ✅ Vite для быстрой разработки
+- ✅ ESLint и Prettier для качества кода
+- ✅ Hot Module Replacement (HMR)
+- ✅ Автоматическая сборка и минификация
 
 ### Масштабируемая архитектура
 - ✅ Структура папок для легкого расширения

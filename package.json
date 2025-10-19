@@ -4,11 +4,23 @@
   "description": "Official website for Beresta project - innovative sensory feedback technology",
   "main": "index.html",
   "scripts": {
-    "dev": "npx http-server -p 8100 -o",
-    "start": "npx http-server -p 8100",
-    "build": "echo 'Static site - no build required'",
+    "dev": "concurrently \"npm run dev:site\" \"npm run dev:api\"",
+    "dev:site": "vite",
+    "dev:api": "cd app/api && npm run dev",
+    "start": "concurrently \"npm run start:site\" \"npm run start:api\"",
+    "start:site": "vite preview --port 8100",
+    "start:api": "cd app/api && npm start",
+    "build": "npm run build:site && npm run build:api",
+    "build:site": "vite build",
+    "build:api": "cd app/api && npm install --production",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.html --ignore-path .gitignore",
+    "lint:fix": "eslint . --ext .js,.html --fix --ignore-path .gitignore",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "echo 'No tests specified'",
-    "lint": "echo 'No linting configured'"
+    "install:api": "cd app/api && npm install",
+    "clean": "rimraf dist app/api/node_modules app/api/package-lock.json"
   },
   "keywords": [
     "beresta",
@@ -20,7 +32,11 @@
   "author": "Beresta Team",
   "license": "UNLICENSED",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "vite": "^5.0.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5"
   },
   "repository": {
     "type": "git",

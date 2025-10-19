@@ -32,6 +32,31 @@ const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url);
   let pathname = parsedUrl.pathname;
   
+  // API proxy to Node.js server
+  if (pathname.startsWith('/app/api/')) {
+    const http = require('http');
+    const proxyReq = http.request({
+      hostname: 'localhost',
+      port: 3000,
+      path: pathname.replace('/app/api', '/api'),
+      method: req.method,
+      headers: req.headers
+    }, (proxyRes) => {
+      res.writeHead(proxyRes.statusCode, proxyRes.headers);
+      proxyRes.pipe(res);
+    });
+    
+    req.pipe(proxyReq);
+    return;
+  }
+  
+  // Redirect old W8dpUuQw URLs to app
+  if (pathname.startsWith('/W8dpUuQw/')) {
+    res.writeHead(301, { 'Location': pathname.replace('/W8dpUuQw', '/app') });
+    res.end();
+    return;
+  }
+  
   // Default to index.html for root
   if (pathname === '/') {
     pathname = '/index.html';
@@ -42,9 +67,15 @@ const server = http.createServer((req, res) => {
   
   // Check if it's a clean URL (no extension and ends with /)
   if (pathname.endsWith('/') && pathname !== '/') {
-    // Remove trailing slash and try to find index.html in that directory
+    // Remove trailing slash and try to find index.html in pages directory
     const cleanPath = pathname.slice(0, -1);
-    filePath = path.join(__dirname, cleanPath, 'index.html');
+    const pagesPath = path.join(__dirname, 'pages', cleanPath.slice(1), 'index.html');
+    if (fs.existsSync(pagesPath)) {
+      filePath = pagesPath;
+    } else {
+      // Try to find index.html in that directory
+      filePath = path.join(__dirname, cleanPath, 'index.html');
+    }
   } else if (!path.extname(pathname) && pathname !== '/') {
     // No extension, try to find index.html in pages directory
     const pagesPath = path.join(__dirname, 'pages', pathname.slice(1), 'index.html');

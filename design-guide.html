@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beresta Design Guide - Руководство по дизайну</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="preload" href="/components/header.html" as="fetch">
+    <link rel="preload" href="/components/footer.html" as="fetch">
+    <style>
+        /* Специальные стили для гайда */
+        .guide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .guide-header {
+            background: url("/img/hero_bg.jpg") center center / cover no-repeat;
+            padding: 120px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--primary-color);
+            position: relative;
+        }
+
+        .guide-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 10, 0.8);
+            z-index: 1;
+        }
+
+        .guide-header > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .guide-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .guide-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .guide-nav {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .guide-nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .guide-nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .guide-nav a:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+        }
+
+        .guide-section {
+            padding: 60px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 40px 0 20px 0;
+            color: var(--secondary-color);
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .color-card {
+            background: rgba(224, 176, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .color-card:hover {
+            background: rgba(224, 176, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .color-swatch {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .color-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .color-hex {
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .typography-example {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .font-sample {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        .font-sample h1 { font-size: 2.5rem; margin: 0; }
+        .font-sample h2 { font-size: 2rem; margin: 0; }
+        .font-sample h3 { font-size: 1.5rem; margin: 0; }
+        .font-sample p { font-size: 1rem; margin: 10px 0; }
+
+        .component-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .component-card {
+            background: rgba(224, 176, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            background: rgba(224, 176, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .button-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 2px solid var(--primary-color);
+            background: none;
+            color: var(--primary-color);
+            font-family: "Manrope", sans-serif;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background: var(--primary-color);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(224, 176, 255, 0.3);
+        }
+
+        .button.btn-primary {
+            background: var(--primary-color);
+            color: #000;
+            border: none;
+        }
+
+        .button.btn-primary:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .button.available {
+            background: #fdfd70;
+            color: #000;
+            border-color: #fdfd70;
+        }
+
+        .button.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .button.default {
+            background: #fff8dc;
+            color: #000;
+            border-color: #fff8dc;
+        }
+
+        .button.disabled {
+            background: #ebebeb;
+            color: #666;
+            border-color: #ebebeb;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-showcase {
+            margin: 20px 0;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: "Manrope", sans-serif;
+            margin: 10px 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(224, 176, 255, 0.1);
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .spacing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .spacing-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .spacing-visual {
+            background: var(--primary-color);
+            margin: 10px auto;
+            border-radius: 4px;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .icon-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .icon-preview {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .layout-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .layout-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .mockup {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(224, 176, 255, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .guide-title {
+                font-size: 2.5rem;
+            }
+            
+            .guide-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .color-palette {
+                grid-template-columns: 1fr;
+            }
+            
+            .component-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Загружаемый хедер -->
+    <div id="header-container"></div>
+
+    <main class="main-content">
+        <div class="guide-container">
+        <!-- Header -->
+        <header class="guide-header">
+            <h1 class="guide-title">Beresta Design Guide</h1>
+            <p class="guide-subtitle">Полное руководство по дизайн-системе проекта Beresta. Цвета, типографика, компоненты и принципы создания интерфейсов.</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="guide-nav">
+            <ul>
+                <li><a href="#colors">Цвета</a></li>
+                <li><a href="#typography">Типографика</a></li>
+                <li><a href="#components">Компоненты</a></li>
+                <li><a href="#spacing">Отступы</a></li>
+                <li><a href="#icons">Иконки</a></li>
+                <li><a href="#layouts">Макеты</a></li>
+                <li><a href="#models">3D Модели</a></li>
+                <li><a href="#code">Код</a></li>
+            </ul>
+        </nav>
+
+        <!-- Colors Section -->
+        <section id="colors" class="guide-section">
+            <h2 class="section-title">Цветовая палитра</h2>
+            
+            <h3 class="subsection-title">Основные цвета</h3>
+            <div class="color-palette">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--primary-color);"></div>
+                    <div class="color-name">Primary Purple</div>
+                    <div class="color-hex">#e0b0ff</div>
+                    <p>Основной акцентный цвет для кнопок, ссылок и важных элементов</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--secondary-color);"></div>
+                    <div class="color-name">Secondary Green</div>
+                    <div class="color-hex">#00ffaa</div>
+                    <p>Вторичный акцентный цвет для успешных действий и активных состояний</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--bg-dark);"></div>
+                    <div class="color-name">Dark Background</div>
+                    <div class="color-hex">#0a0a0a</div>
+                    <p>Основной темный фон приложения</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Функциональные цвета</h3>
+            <div class="color-palette">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #fdfd70;"></div>
+                    <div class="color-name">Available</div>
+                    <div class="color-hex">#fdfd70</div>
+                    <p>Доступные кнопки и активные элементы</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #fff;"></div>
+                    <div class="color-name">Active</div>
+                    <div class="color-hex">#ffffff</div>
+                    <p>Активные/выбранные элементы</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #fff8dc;"></div>
+                    <div class="color-name">Default</div>
+                    <div class="color-hex">#fff8dc</div>
+                    <p>Кнопки по умолчанию</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #ebebeb;"></div>
+                    <div class="color-name">Disabled</div>
+                    <div class="color-hex">#ebebeb</div>
+                    <p>Неактивные элементы</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: red;"></div>
+                    <div class="color-name">Matrix On</div>
+                    <div class="color-hex">#ff0000</div>
+                    <p>Включенные пиксели матрицы</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #f0f8ff;"></div>
+                    <div class="color-name">Connect Button</div>
+                    <div class="color-hex">#f0f8ff</div>
+                    <p>Кнопка подключения Bluetooth</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">CSS переменные</h3>
+            <div class="code-block">
+                <pre>:root {
+  --primary-color: #e0b0ff;
+  --secondary-color: #00ffaa;
+  --bg-dark: #0a0a0a;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --border-color: rgba(224, 176, 255, 0.2);
+  --border-hover: rgba(224, 176, 255, 0.4);
+}</pre>
+            </div>
+        </section>
+
+        <!-- Typography Section -->
+        <section id="typography" class="guide-section">
+            <h2 class="section-title">Типографика</h2>
+            
+            <div class="typography-example">
+                <h3 class="subsection-title">Шрифт Manrope</h3>
+                <p>Основной шрифт проекта - Manrope от Google Fonts. Поддерживает кириллицу и имеет веса: 400, 500, 600, 700.</p>
+                
+                <div class="font-sample">
+                    <h1>Заголовок H1 - 2.5rem</h1>
+                    <h2>Заголовок H2 - 2rem</h2>
+                    <h3>Заголовок H3 - 1.5rem</h3>
+                    <p>Основной текст - 1rem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap&subset=cyrillic");
+
+body {
+  font-family: "Manrope", sans-serif;
+}</pre>
+            </div>
+        </section>
+
+        <!-- Components Section -->
+        <section id="components" class="guide-section">
+            <h2 class="section-title">Компоненты</h2>
+            
+            <div class="component-showcase">
+                <div class="component-card">
+                    <h3 class="subsection-title">Кнопки</h3>
+                    <div class="button-showcase">
+                        <button class="button">Обычная кнопка</button>
+                        <button class="button available">Доступная</button>
+                        <button class="button active">Активная</button>
+                        <button class="button default">По умолчанию</button>
+                        <button class="button disabled">Неактивная</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="subsection-title">Поля ввода</h3>
+                    <div class="input-showcase">
+                        <input type="text" class="input-field" placeholder="Обычное поле ввода">
+                        <input type="text" class="input-field" value="0xFFE0" placeholder="Поле с значением">
+                        <textarea class="input-field" rows="3" placeholder="Текстовая область"></textarea>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="subsection-title">Карточки</h3>
+                    <div class="mockup">
+                        <h4>Заголовок карточки</h4>
+                        <p>Содержимое карточки с полупрозрачным фоном и фиолетовой границей.</p>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="subsection-title">Матрица пикселей</h3>
+                    <div style="display: flex; gap: 10px; margin: 20px 0;">
+                        <div style="width: 20px; height: 20px; background: #fff; border: 1px solid #ccc; border-radius: 50%;"></div>
+                        <div style="width: 20px; height: 20px; background: red; border: 1px solid red; border-radius: 50%; box-shadow: 0 0 8px rgba(255,0,0,0.5);"></div>
+                    </div>
+                    <p>Белый - выключенный пиксель, красный - включенный с свечением</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>.button {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--primary-color);
+  color: var(--bg-dark);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(224, 176, 255, 0.3);
+}</pre>
+            </div>
+        </section>
+
+        <!-- Spacing Section -->
+        <section id="spacing" class="guide-section">
+            <h2 class="section-title">Система отступов</h2>
+            
+            <div class="spacing-grid">
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 8px; height: 8px;"></div>
+                    <div>8px - xs</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 12px; height: 12px;"></div>
+                    <div>12px - sm</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 16px; height: 16px;"></div>
+                    <div>16px - md</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 20px; height: 20px;"></div>
+                    <div>20px - lg</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 30px; height: 30px;"></div>
+                    <div>30px - xl</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 40px; height: 40px;"></div>
+                    <div>40px - xxl</div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>/* Примеры использования отступов */
+.component {
+  padding: 20px;        /* lg */
+  margin-bottom: 30px;  /* xl */
+  gap: 15px;           /* между элементами */
+}</pre>
+            </div>
+        </section>
+
+        <!-- Icons Section -->
+        <section id="icons" class="guide-section">
+            <h2 class="section-title">Иконки</h2>
+            
+            <div class="icon-grid">
+                <div class="icon-item">
+                    <div class="icon-preview" style="background-image: url('app/css/icons/play.svg'); filter: brightness(0) invert(1);"></div>
+                    <div>Play</div>
+                </div>
+                <div class="icon-item">
+                    <div class="icon-preview" style="background-image: url('app/css/icons/pause.svg'); filter: brightness(0) invert(1);"></div>
+                    <div>Pause</div>
+                </div>
+                <div class="icon-item">
+                    <div class="icon-preview" style="background-image: url('app/css/icons/stop.svg'); filter: brightness(0) invert(1);"></div>
+                    <div>Stop</div>
+                </div>
+                <div class="icon-item">
+                    <div class="icon-preview" style="background-image: url('app/css/icons/close.svg'); filter: brightness(0) invert(1);"></div>
+                    <div>Close</div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>/* Использование иконок */
+.icon-button {
+  background-image: url('icons/play.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+  filter: brightness(0) invert(1); /* Белые иконки */
+}</pre>
+            </div>
+        </section>
+
+        <!-- Layouts Section -->
+        <section id="layouts" class="guide-section">
+            <h2 class="section-title">Макеты и структура</h2>
+            
+            <div class="layout-examples">
+                <div class="layout-card">
+                    <h3 class="subsection-title">Двухколоночная верстка</h3>
+                    <div class="mockup">
+                        <div style="display: flex; gap: 20px; margin: 10px 0;">
+                            <div style="flex: 1; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">Левая колонка</div>
+                            <div style="flex: 1; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">Правая колонка</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layout-card">
+                    <h3 class="subsection-title">Адаптивность</h3>
+                    <div class="mockup">
+                        <p><strong>Desktop:</strong> Две колонки рядом</p>
+                        <p><strong>Tablet:</strong> Колонки стекаются вертикально</p>
+                        <p><strong>Mobile:</strong> Одна колонка, уменьшенные отступы</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>.two-column-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .two-column-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+}</pre>
+            </div>
+        </section>
+
+        <!-- 3D Models Section -->
+        <section id="models" class="guide-section">
+            <h2 class="section-title">3D Модели и Google Model Viewer</h2>
+            
+            <div class="component-showcase">
+                <div class="component-card">
+                    <h3 class="subsection-title">Google Model Viewer</h3>
+                    <p>Основной инструмент для отображения 3D моделей в проекте Beresta.</p>
+                    
+                    <div class="mockup" style="height: 300px; display: flex; align-items: center; justify-content: center; background: #111;">
+                        <model-viewer 
+                            src="/models/beresta.glb" 
+                            alt="3D модель Бересты" 
+                            camera-controls 
+                            auto-rotate 
+                            style="width: 100%; height: 100%; border-radius: 8px;">
+                        </model-viewer>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="subsection-title">Настройки Model Viewer</h3>
+                    <div class="code-block">
+                        <pre>&lt;model-viewer 
+  src="/models/beresta.glb" 
+  alt="3D модель Бересты" 
+  camera-controls 
+  auto-rotate 
+  ar 
+  fallback-src="/img/device-3d.png"
+  style="width:100%; height:500px; background:#111; border-radius:10px;"&gt;
+&lt;/model-viewer&gt;</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Поддерживаемые форматы</h3>
+            <div class="color-palette">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #4CAF50; display: flex; align-items: center; justify-content: center; font-size: 2rem;">📦</div>
+                    <div class="color-name">GLB</div>
+                    <div class="color-hex">Binary GLTF</div>
+                    <p>Основной формат для 3D моделей. Содержит геометрию, материалы и анимации.</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #2196F3; display: flex; align-items: center; justify-content: center; font-size: 2rem;">📁</div>
+                    <div class="color-name">GLTF</div>
+                    <div class="color-hex">JSON + Binaries</div>
+                    <p>Текстовый формат GLTF с отдельными файлами для текстур и геометрии.</p>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #FF9800; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🎨</div>
+                    <div class="color-name">FBX</div>
+                    <div class="color-hex">Autodesk FBX</div>
+                    <p>Формат для экспорта из 3D редакторов. Конвертируется в GLB.</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Атрибуты Model Viewer</h3>
+            <div class="code-block">
+                <pre>// Основные атрибуты
+camera-controls     // Управление камерой мышью
+auto-rotate         // Автоматическое вращение
+ar                  // Поддержка AR
+fallback-src        // Изображение-заглушка
+interaction-policy  // Политика взаимодействия
+camera-orbit        // Начальная позиция камеры
+field-of-view       // Угол обзора
+min-camera-orbit    // Ограничения камеры
+max-camera-orbit    // Ограничения камеры
+
+// Стилизация
+style="width:100%; height:500px; background:#111; border-radius:10px;"</pre>
+            </div>
+
+            <h3 class="subsection-title">JavaScript API</h3>
+            <div class="code-block">
+                <pre>// Получение элемента
+const modelViewer = document.querySelector('model-viewer');
+
+// События
+modelViewer.addEventListener('load', () => {
+  console.log('Модель загружена');
+});
+
+modelViewer.addEventListener('error', (event) => {
+  console.error('Ошибка загрузки:', event.detail);
+});
+
+// Управление анимацией
+modelViewer.play();
+modelViewer.pause();
+
+// Управление камерой
+modelViewer.cameraOrbit = '0deg 75deg 1.5m';
+modelViewer.fieldOfView = '30deg';</pre>
+            </div>
+        </section>
+
+        <!-- Code Section -->
+        <section id="code" class="guide-section">
+            <h2 class="section-title">Стандарты кода</h2>
+            
+            <h3 class="subsection-title">CSS принципы</h3>
+            <div class="code-block">
+                <pre>/* 1. Используйте CSS переменные */
+:root {
+  --primary-color: #e0b0ff;
+  --border-radius: 8px;
+}
+
+/* 2. Следуйте BEM методологии */
+.button { }
+.button--primary { }
+.button__icon { }
+
+/* 3. Используйте современные CSS свойства */
+.component {
+  display: flex;
+  gap: 20px;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+/* 4. Адаптивный дизайн */
+@media (max-width: 768px) {
+  .component {
+    flex-direction: column;
+  }
+}</pre>
+            </div>
+
+            <h3 class="subsection-title">JavaScript принципы</h3>
+            <div class="code-block">
+                <pre>// 1. Используйте современный ES6+ синтаксис
+class MatrixController {
+  constructor() {
+    this.pixels = [];
+    this.isEnabled = false;
+  }
+
+  // 2. Асинхронные операции
+  async connect() {
+    try {
+      await this.bluetooth.connect();
+      this.updateStatus('connected');
+    } catch (error) {
+      console.error('Connection failed:', error);
+    }
+  }
+
+  // 3. Обработка событий
+  handlePixelClick(event) {
+    const pixel = event.target;
+    pixel.classList.toggle('on');
+    this.updateMatrix();
+  }
+}</pre>
+            </div>
+        </section>
+        </div>
+    </main>
+
+    <!-- Загружаемый футер -->
+    <div id="footer-container"></div>
+
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top">↑</a>
+
+    <script src="js/loadComponents.js"></script>
+    <script src="js/i18n.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script>
+        // Инициализация компонентов и локализации
+        document.addEventListener('DOMContentLoaded', () => {
+            // Загрузка компонентов
+            loadHeader();
+            loadFooter();
+            
+            // Инициализация языка
+            const defaultLang = navigator.language.startsWith('ru') ? 'ru' : 'en';
+            loadLanguage(defaultLang);
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.guide-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Back to top functionality
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+
+        backToTop.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Copy code blocks
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', () => {
+                const code = block.querySelector('pre').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    // Visual feedback
+                    block.style.background = 'rgba(224, 176, 255, 0.1)';
+                    setTimeout(() => {
+                        block.style.background = '#1a1a1a';
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

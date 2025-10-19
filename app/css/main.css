@@ -1,5 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap&subset=cyrillic");
+
+:root {
+    --primary-color: #e0b0ff;
+    --secondary-color: #00ffaa;
+    --bg-dark: #0a0a0a;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --border-color: rgba(224, 176, 255, 0.2);
+    --border-hover: rgba(224, 176, 255, 0.4);
+}
+
 body {
-    font-size: 14px
+    font-family: "Manrope", sans-serif;
+    font-size: 14px;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
 }
 
 .main-container {
@@ -28,13 +46,33 @@ body {
 .text-input-container .text-input textarea {
     width: 100%;
     height: 140px;
-    border: 2px solid gray;
-    border-radius: 5px;
-    margin-bottom: -4px
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: -4px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    padding: 12px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.text-input-container .text-input textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(224, 176, 255, 0.1);
 }
 
 .matrix-container .matrix-box {
-    border: 1px solid gray
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-card);
+    padding: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.matrix-container .matrix-box:hover {
+    border-color: var(--border-hover);
 }
 
 .matrix-box .matrix-row {
@@ -53,12 +91,22 @@ body {
 .matrix-container {
     display: flex;
     margin-bottom: 10px;
-    background: #dfdfdf;
-    width: fit-content
+    background: var(--bg-card);
+    width: fit-content;
+    border-radius: 12px;
+    padding: 15px;
+    gap: 15px;
+    border: 1px solid var(--border-color);
 }
 
 .text-line-container {
     height: 40px
+}
+
+.clear-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
 }
 
 .text-line-container .text-line {
@@ -98,12 +146,33 @@ body {
     border-radius: 5px
 }
 
+.text-input-container .buttons-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
 .text-input-container .buttons-container .button {
-    width: 35px;
-    border: 2px solid gray;
-    border-radius: 5px;
-    margin: 5px 0;
-    height: 32px
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.text-input-container .buttons-container .button:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(224, 176, 255, 0.3);
 }
 
 .text-line-container .button img {
@@ -128,10 +197,15 @@ body {
 }
 
 .under-input-buttons-container .under-input-buttons .button {
-    border: 2px solid gray;
-    border-radius: 0 0 5px 5px;
-    padding: 6px;
-    text-align: center
+    border: 2px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
+    padding: 8px 12px;
+    text-align: center;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .under-input-buttons-container .under-input-buttons .fix-button-1 {
@@ -144,15 +218,46 @@ body {
 }
 
 .parameters-container input {
-    border: 2px solid gray;
-    border-radius: 5px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
     width: 30px;
     text-align: center;
-    height: 20px
+    height: 20px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.parameters-container input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(224, 176, 255, 0.1);
+}
+
+.parameters-container {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+.parameters-container .header {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .parameters-container .sets-container {
-    padding: 5px 0
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.parameters-container .sets-container:last-child {
+    border-bottom: none;
 }
 
 .parameters-container .regime-sets-container .button {
@@ -179,16 +284,43 @@ body {
     margin: auto
 }
 
+.button {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+}
+
 .button:hover {
-    cursor: pointer
+    background: var(--primary-color);
+    color: var(--bg-dark);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(224, 176, 255, 0.3);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(224, 176, 255, 0.2);
 }
 
 .parameters-container .button:hover {
-    background: #e8f4ff
+    background: var(--primary-color);
+    color: var(--bg-dark);
+    border-color: var(--primary-color);
 }
 
 .parameters-container .button:active {
-    background: #9ed2ff
+    background: var(--secondary-color);
+    color: var(--bg-dark);
 }
 
 .parameters-container .leftright-sets-container span {
@@ -328,56 +460,87 @@ body {
 #play {
     background-image: url(icons/play.svg);
     background-repeat: no-repeat;
-    background-position: 6px;
-    background-size: 24px
+    background-position: center;
+    background-size: 20px;
+    filter: brightness(0) invert(1);
 }
 
 #pause {
     background-image: url(icons/pause.svg);
     background-repeat: no-repeat;
-    background-position: 6px;
-    background-size: 24px
+    background-position: center;
+    background-size: 20px;
+    filter: brightness(0) invert(1);
 }
 
 #stop {
     background-image: url(icons/stop.svg);
     background-repeat: no-repeat;
-    background-position: 6px;
-    background-size: 20px
+    background-position: center;
+    background-size: 18px;
+    filter: brightness(0) invert(1);
 }
 
 #clear {
     background-image: url(icons/close.svg);
     background-repeat: no-repeat;
-    background-position: 7px;
-    background-size: 24px
+    background-position: center;
+    background-size: 20px;
+    width: 40px;
+    height: 32px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-card);
+    transition: all 0.3s ease;
+}
+
+#clear:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(224, 176, 255, 0.3);
 }
 
 .available {
-    background-color: #fdfd70
+    background: #fdfd70;
+    color: #000;
+    border-color: #fdfd70;
 }
 
 .available:hover {
-    background-color: #fdf270
+    background: #fdf270;
+    border-color: #fdf270;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(253, 253, 112, 0.4);
 }
 
 .active {
-    background-color: #fff
+    background: #fff;
+    color: #000;
+    border-color: #fff;
 }
 
 .default {
-    background-color: #fff8dc
+    background: #fff8dc;
+    color: #000;
+    border-color: #fff8dc;
 }
 
 .disabled {
-    background-color: #ebebeb;
-    opacity: .5
+    background: #ebebeb;
+    color: #666;
+    border-color: #ebebeb;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .disabled:hover {
-    background-color: #ebebeb;
-    opacity: .5;
-    cursor: default
+    background: #ebebeb;
+    color: #666;
+    border-color: #ebebeb;
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
 }
 
 #code,
@@ -393,16 +556,20 @@ body {
 .pixel {
     width: 19px;
     height: 19px;
-    border: 1px solid #ccc;
-    border-radius: 50%
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    transition: all 0.2s ease;
 }
 
 .off {
-    background: #fff
+    background: #fff;
+    border-color: #ccc;
 }
 
 .on {
-    background: red
+    background: red;
+    border-color: red;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
 }
 
 .mtable,
@@ -450,22 +617,40 @@ body {
 
 .matrix-input-container {
     display: flex;
-    background: #dfdfdf;
-    width: 290px;
-    border: 2px solid gray;
-    border-radius: 5px 5px 0 0;
-    user-select: none
+    background: var(--bg-card);
+    width: 100%;
+    border: 2px solid var(--border-color);
+    border-radius: 8px 8px 0 0;
+    user-select: none;
+    padding: 10px;
+    gap: 10px;
 }
 
 .matrix-input-container .matrix-box {
-    border: 1px solid gray
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-dark);
+    padding: 8px;
 }
 
 .matrix-input-container .input-pixel {
     width: 15.8px;
     height: 15.8px;
     border: 1px solid #ccc;
-    border-radius: 50%
+    border-radius: 50%;
+    background: #fff;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.matrix-input-container .input-pixel:hover {
+    border-color: #999;
+}
+
+.matrix-input-container .input-pixel.on {
+    background: red;
+    border-color: red;
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
 }
 
 .left-buttons {
@@ -477,16 +662,19 @@ body {
 }
 
 .text-line-div {
-    background: #f7f7f7;
+    background: var(--bg-card);
     height: 33px;
-    width: 285px;
-    border-radius: 5px;
-    border: 2px solid gray;
+    width: 100%;
+    border-radius: 6px;
+    border: 2px solid var(--border-color);
     margin-bottom: 30px;
     font-size: 23px;
-    padding: 0 5px;
+    padding: 0 12px;
     display: flex;
-    overflow: auto
+    overflow: auto;
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    align-items: center;
 }
 
 .text-line-div::-webkit-scrollbar {
@@ -522,24 +710,89 @@ dot.true {
 #connect {
     text-align: center;
     width: 80px;
-    height: 16px;
+    height: 32px;
     border: 1px solid gray;
-    border-radius: 5px;
+    border-radius: 6px;
     background: #f0f8ff;
-    margin: auto
+    color: #000;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    margin: auto;
+    transition: all 0.3s ease;
+}
+
+#connect:hover {
+    background: #e0f0ff;
+    border-color: #999;
 }
 
 textarea#logs {
-    width: 250px;
-    height: 80px
+    width: 100%;
+    height: 80px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    padding: 8px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+textarea#logs:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(224, 176, 255, 0.1);
 }
 
 .bl-sets-container {
-    padding-bottom: 15px
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
 }
 
 .bl-sets-container * {
     padding-bottom: 2px
+}
+
+.bl-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.service, .char {
+    width: 100%;
+}
+
+.service input, .char input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    font-size: 12px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.service input:focus, .char input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(224, 176, 255, 0.1);
+}
+
+.service span, .char span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 11px;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
 .queue-buttons-container {
