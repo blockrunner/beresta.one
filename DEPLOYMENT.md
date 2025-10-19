@@ -125,7 +125,8 @@ public_html/
 ├── js/                        # JavaScript файлы
 ├── locales/                   # Локализация
 ├── models/                    # 3D модели
-├── W8dpUuQw/                  # Основная версия сайта
+├── app/                       # Основная версия приложения
+├── W8dpUuQw/                  # Совместимость (копия app/)
 ├── W8dpUuQw_dev/              # Dev версия
 ├── *.html                     # HTML страницы
 ├── package.json               # Node.js зависимости

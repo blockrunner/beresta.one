@@ -56,17 +56,8 @@ jobs:
         # Install sshpass for password authentication
         sudo apt-get update && sudo apt-get install -y sshpass rsync
         
-        # Debug: Show what we're about to sync
-        echo "Files to sync:"
-        ls -la
-        
-        # Debug: Test SSH connection
-        echo "Testing SSH connection..."
-        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pwd && ls -la"
-        
         # Sync files to server
-        echo "Starting rsync..."
-        sshpass -e rsync -avz --delete --verbose \
+        sshpass -e rsync -avz --delete --verbose --no-times \
           -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
           --exclude='.git*' \
           --exclude='.github/' \
@@ -80,10 +71,6 @@ jobs:
           --exclude='DEPLOYMENT.md' \
           --exclude='GITHUB_SETUP.md' \
           ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || '.' }}
-          
-        # Debug: Verify files were uploaded
-        echo "Verifying uploaded files..."
-        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls -la ${{ secrets.SSH_REMOTE_PATH || '.' }}"
           
     - name: Notify deployment status
       if: always()
