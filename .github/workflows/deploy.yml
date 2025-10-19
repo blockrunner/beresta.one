@@ -37,7 +37,6 @@ jobs:
       
     # Deploy via SSH - requires SSH_HOST, SSH_USER, SSH_PASS secrets
     - name: Deploy to hosting via SSH
-      if: ${{ secrets.SSH_HOST }}
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -50,7 +49,6 @@ jobs:
           
     # Sync files via rsync - requires SSH secrets
     - name: Sync files via rsync
-      if: ${{ secrets.SSH_HOST }}
       env:
         SSHPASS: ${{ secrets.SSH_PASS }}
       run: |
