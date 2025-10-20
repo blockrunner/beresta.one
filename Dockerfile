@@ -1,5 +1,7 @@
-# Multi-stage build для production с nginx
-FROM node:18-alpine AS base
+# ===========================================
+# Stage 1: Build stage
+# ===========================================
+FROM node:18-alpine AS builder
 
 # Установка системных зависимостей
 RUN apk add --no-cache \
@@ -8,30 +10,18 @@ RUN apk add --no-cache \
     make \
     g++
 
-# Рабочая директория
 WORKDIR /app
 
 # Копирование package.json файлов для кэширования слоев
 COPY package*.json ./
 COPY app/api/package*.json ./app/api/
 
-# Установка зависимостей
-RUN npm ci --only=production && \
-    cd app/api && npm ci --only=production
-
-# ===========================================
-# Stage 1: Build stage
-# ===========================================
-FROM node:18-alpine AS builder
-
-WORKDIR /app
+# Установка всех зависимостей (включая dev для сборки)
+RUN npm ci && \
+    cd app/api && npm ci
 
 # Копирование всех файлов для сборки
 COPY . .
-
-# Установка всех зависимостей (включая dev)
-RUN npm ci && \
-    cd app/api && npm ci
 
 # Сборка frontend
 RUN npm run build:site
