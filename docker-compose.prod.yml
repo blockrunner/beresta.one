@@ -1,0 +1,32 @@
+name: beresta-one
+
+services:
+  # Production приложение с nginx
+  beresta-app:
+    image: ghcr.io/your-username/beresta-website:latest
+    container_name: beresta.one-prod
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      - "3000:3000"  # API
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - API_PORT=3000
+      - HOST=0.0.0.0
+      - CORS_ORIGIN=https://beresta.one
+    volumes:
+      - ./app/data:/app/app/data
+      - ./logs:/app/logs
+      - ./ssl:/etc/nginx/ssl:ro
+    restart: unless-stopped
+    networks:
+      - beresta-network
+
+networks:
+  beresta-network:
+    driver: bridge
+
+volumes:
+  app-data:
+  logs:

@@ -1,82 +1,115 @@
-name: Deploy to Hosting
+name: Deploy to Production
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
       with:
-        node-version: '18'
-        
-    - name: Install dependencies (if package.json exists)
-      run: |
-        if [ -f package.json ]; then
-          npm ci
-        fi
-      continue-on-error: true
-      
-    - name: Build project (if build script exists)
-      run: |
-        if [ -f package.json ] && npm run build --if-present; then
-          echo "Build completed"
-        else
-          echo "No build script found, using static files"
-        fi
-      continue-on-error: true
-      
-    # Deploy via SSH - requires SSH_HOST, SSH_USER, SSH_PASS secrets
-    - name: Deploy to hosting via SSH
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile.prod
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Deploy to production server
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASS }}
-        port: ${{ secrets.SSH_PORT || 22 }}
-        use_insecure_cipher: true
+        host: ${{ secrets.PRODUCTION_HOST }}
+        username: ${{ secrets.PRODUCTION_USER }}
+        key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        port: ${{ secrets.PRODUCTION_PORT }}
         script: |
-          # Create directory if it doesn't exist (user has access only to public_html folder)
-          mkdir -p ${{ secrets.SSH_REMOTE_PATH || '.' }}
+          # Переход в директорию проекта
+          cd /var/www/beresta
           
-    # Sync files via rsync - requires SSH secrets
-    - name: Sync files via rsync
-      env:
-        SSHPASS: ${{ secrets.SSH_PASS }}
-      run: |
-        # Install sshpass for password authentication
-        sudo apt-get update && sudo apt-get install -y sshpass rsync
-        
-        # Sync files to server
-        sshpass -e rsync -avz --delete --verbose --no-times \
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
-          --exclude='.git*' \
-          --exclude='.github/' \
-          --exclude='.vscode/' \
-          --exclude='node_modules/' \
-          --exclude='README.md' \
-          --exclude='.gitignore' \
-          --exclude='package*.json' \
-          --exclude='yarn.lock' \
-          --exclude='.env*' \
-          --exclude='DEPLOYMENT.md' \
-          --exclude='GITHUB_SETUP.md' \
-          ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_REMOTE_PATH || '.' }}
+          # Остановка текущих контейнеров
+          docker-compose down
           
+          # Обновление кода
+          git pull origin main
+          
+          # Сборка нового образа
+          docker-compose build --no-cache beresta-app
+          
+          # Запуск обновленных контейнеров
+          docker-compose up -d beresta-app
+          
+          # Очистка старых образов
+          docker image prune -f
+          
+          echo "Deployment completed successfully!"
+
+    - name: Health check
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PRODUCTION_HOST }}
+        username: ${{ secrets.PRODUCTION_USER }}
+        key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        port: ${{ secrets.PRODUCTION_PORT }}
+        script: |
+          # Проверка статуса контейнеров
+          docker-compose ps
+          
+          # Проверка доступности сайта
+          curl -f https://beresta.one/ || exit 1
+          curl -f https://beresta.one/applications/ || exit 1
+          
+          echo "Health check passed!"
+
     - name: Notify deployment status
       if: always()
-      run: |
-        if [ "${{ job.status }}" == "success" ]; then
-          echo "✅ Deployment successful!"
-        else
-          echo "❌ Deployment failed!"
-        fi
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PRODUCTION_HOST }}
+        username: ${{ secrets.PRODUCTION_USER }}
+        key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        port: ${{ secrets.PRODUCTION_PORT }}
+        script: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+            echo "🌐 Site: https://beresta.one"
+            echo "📱 App: https://beresta.one/app"
+          else
+            echo "❌ Deployment failed!"
+            echo "Check logs for details"
+          fi
