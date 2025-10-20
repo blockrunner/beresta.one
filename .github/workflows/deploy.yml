@@ -59,22 +59,54 @@ jobs:
         key: ${{ secrets.PRODUCTION_SSH_KEY }}
         port: ${{ secrets.PRODUCTION_PORT }}
         script: |
+          # Создание директорий если не существуют
+          sudo mkdir -p /var/www/beresta
+          sudo chown $USER:$USER /var/www/beresta
+          
           # Переход в директорию проекта
           cd /var/www/beresta
           
-          # Остановка текущих контейнеров
-          docker-compose down
+          # Клонирование репозитория если не существует
+          if [ ! -d ".git" ]; then
+            echo "Cloning repository..."
+            git clone https://github.com/${{ github.repository }}.git .
+          fi
           
           # Обновление кода
-          git pull origin main
+          echo "Updating code..."
+          git fetch origin
+          git reset --hard origin/main
+          
+          # Создание необходимых директорий
+          mkdir -p app/data logs ssl
+          
+          # Создание самоподписанного SSL сертификата если не существует
+          if [ ! -f ssl/beresta.crt ] || [ ! -f ssl/beresta.key ]; then
+            echo "Creating self-signed SSL certificate..."
+            sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+              -keyout ssl/beresta.key \
+              -out ssl/beresta.crt \
+              -subj "/C=RU/ST=Saratov/L=Saratov/O=Beresta/CN=beresta.one"
+            sudo chown $USER:$USER ssl/*
+          fi
+          
+          # Копирование production конфигурации с правильным именем образа
+          sed "s/your-username\/beresta-website/${{ github.repository }}/g" docker-compose.prod.yml > docker-compose.yml
+          
+          # Остановка текущих контейнеров
+          echo "Stopping current containers..."
+          docker-compose down || true
           
           # Сборка нового образа
+          echo "Building new image..."
           docker-compose build --no-cache beresta-app
           
           # Запуск обновленных контейнеров
+          echo "Starting updated containers..."
           docker-compose up -d beresta-app
           
           # Очистка старых образов
+          echo "Cleaning up old images..."
           docker image prune -f
           
           echo "Deployment completed successfully!"
