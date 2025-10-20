@@ -261,3 +261,4 @@ npm run clean && npm install && npm run install:api
 1. Проверьте настройки CORS в `app/api/server.js`
 2. Убедитесь, что `CORS_ORIGIN` правильно настроен
 3. Проверьте, что API запущен на правильном порту
+
