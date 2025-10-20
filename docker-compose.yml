@@ -5,23 +5,25 @@ services:
   beresta-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       target: production
       tags:
         - beresta.one:prod
     container_name: beresta.one-prod
     ports:
-      - "8100:8100"  # Frontend
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
       - "3000:3000"  # API
     environment:
       - NODE_ENV=production
-      - PORT=8100
+      - PORT=3000
       - API_PORT=3000
       - HOST=0.0.0.0
-      - CORS_ORIGIN=http://localhost:8100
+      - CORS_ORIGIN=https://beresta.one
     volumes:
       - ./app/data:/app/app/data
       - ./logs:/app/logs
+      - ./ssl:/etc/nginx/ssl:ro
     restart: unless-stopped
     networks:
       - beresta-network

@@ -1,0 +1,100 @@
+# Multi-stage build для production с nginx
+FROM node:18-alpine AS base
+
+# Установка системных зависимостей
+RUN apk add --no-cache \
+    git \
+    python3 \
+    make \
+    g++
+
+# Рабочая директория
+WORKDIR /app
+
+# Копирование package.json файлов для кэширования слоев
+COPY package*.json ./
+COPY app/api/package*.json ./app/api/
+
+# Установка зависимостей
+RUN npm ci --only=production && \
+    cd app/api && npm ci --only=production
+
+# ===========================================
+# Stage 1: Build stage
+# ===========================================
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Копирование всех файлов для сборки
+COPY . .
+
+# Установка всех зависимостей (включая dev)
+RUN npm ci && \
+    cd app/api && npm ci
+
+# Сборка frontend
+RUN npm run build:site
+
+# ===========================================
+# Stage 2: Production stage с nginx
+# ===========================================
+FROM nginx:alpine AS production
+
+# Установка Node.js для API
+RUN apk add --no-cache nodejs npm
+
+# Создание пользователя для безопасности
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S beresta -u 1001
+
+# Рабочая директория для API
+WORKDIR /app
+
+# Копирование собранных файлов из builder stage
+COPY --from=builder --chown=beresta:nodejs /app/dist /usr/share/nginx/html
+COPY --from=builder --chown=beresta:nodejs /app/app/api ./app/api
+COPY --from=builder --chown=beresta:nodejs /app/app/api/node_modules ./app/api/node_modules
+
+# Копирование статических файлов
+COPY --chown=beresta:nodejs app/css /usr/share/nginx/html/app/css
+COPY --chown=beresta:nodejs app/js /usr/share/nginx/html/app/js
+COPY --chown=beresta:nodejs app/index.html /usr/share/nginx/html/app/index.html
+
+# Копирование конфигурационных файлов
+COPY --chown=beresta:nodejs config /usr/share/nginx/html/config
+COPY --chown=beresta:nodejs locales /usr/share/nginx/html/locales
+COPY --chown=beresta:nodejs shared /usr/share/nginx/html/shared
+
+# Копирование nginx конфигурации
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY beresta-common.conf /etc/nginx/snippets/beresta-common.conf
+
+# Создание директорий для данных
+RUN mkdir -p /app/app/data /app/logs && \
+    chown -R beresta:nodejs /app/app/data /app/logs
+
+# Переключение на пользователя beresta для API
+USER beresta
+
+# Открытие портов
+EXPOSE 80 443 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# Скрипт запуска nginx и API
+COPY --chown=beresta:nodejs <<EOF /app/start.sh
+#!/bin/sh
+# Запуск API в фоне
+cd /app/app/api && npm start &
+
+# Запуск nginx
+nginx -g "daemon off;"
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Запуск приложения
+CMD ["/app/start.sh"]
