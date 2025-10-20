@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to Production (PM2)
 
 on:
   push:
@@ -47,6 +47,9 @@ jobs:
         cp ecosystem.config.js deploy-package/
         cp .env.example deploy-package/.env
         
+        # Create logs directory
+        mkdir -p deploy-package/logs
+        
         # Create .htaccess for Apache
         cat > deploy-package/.htaccess << 'EOF'
         RewriteEngine On
@@ -74,6 +77,34 @@ jobs:
         </IfModule>
         EOF
         
+        # Create PM2 startup script
+        cat > deploy-package/start.sh << 'EOF'
+        #!/bin/bash
+        cd "$(dirname "$0")"
+        
+        # Install PM2 globally if not installed
+        if ! command -v pm2 &> /dev/null; then
+            npm install -g pm2
+        fi
+        
+        # Stop existing application
+        pm2 stop beresta-website 2>/dev/null || true
+        pm2 delete beresta-website 2>/dev/null || true
+        
+        # Start application with PM2
+        pm2 start ecosystem.config.js --env production
+        
+        # Save PM2 configuration
+        pm2 save
+        
+        # Setup PM2 startup (if not already done)
+        pm2 startup 2>/dev/null || true
+        
+        echo "Application started with PM2"
+        EOF
+        
+        chmod +x deploy-package/start.sh
+        
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.8.0
       with:
@@ -93,24 +124,21 @@ jobs:
         # Set up environment
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && cp .env.example .env"
         
-    - name: Restart application
+    - name: Restart application with PM2
       run: |
-        # Kill existing process
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill -f 'node server.js' || true"
-        
-        # Start application in background
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && nohup npm start > app.log 2>&1 &"
+        # Run the startup script
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && ./start.sh"
         
         # Wait for application to start
-        sleep 5
+        sleep 10
         
         # Check if application is running
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pgrep -f 'node server.js' > /dev/null"
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pm2 status beresta-website"
         
     - name: Health check
       run: |
         # Wait for application to be ready
-        sleep 10
+        sleep 15
         
         # Check main page
         curl -f "http://${{ secrets.SSH_HOST }}/" || exit 1
@@ -119,6 +147,10 @@ jobs:
         curl -f "http://${{ secrets.SSH_HOST }}/applications/" || exit 1
         
         echo "✅ Health check passed - application is running"
+        
+    - name: Show PM2 status
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pm2 status"
         
     - name: Cleanup
       if: always()

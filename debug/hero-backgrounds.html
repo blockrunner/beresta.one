@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Варианты фона Hero секции - Beresta</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      background: #0a0a0a;
+      min-height: 100vh;
+    }
+    
+    .demo-section {
+      position: relative;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(224, 176, 255, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .demo-content {
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .demo-title {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #e0b0ff;
+    }
+    
+    .demo-description {
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+    
+    .variant-selector {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(224, 176, 255, 0.3);
+      z-index: 1000;
+    }
+    
+    .variant-btn {
+      display: block;
+      width: 100%;
+      padding: 10px 15px;
+      margin: 5px 0;
+      background: none;
+      border: 1px solid #e0b0ff;
+      color: #e0b0ff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .variant-btn:hover,
+    .variant-btn.active {
+      background: #e0b0ff;
+      color: #000;
+    }
+    
+    .current-variant {
+      color: #00ffaa;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-selector">
+    <div class="current-variant">Текущий вариант: <span id="current-variant-name">Оригинал</span></div>
+    <button class="variant-btn" onclick="switchVariant('original')">Оригинал</button>
+    <button class="variant-btn" onclick="switchVariant('variant-1')">Вариант 1: Частицы</button>
+    <button class="variant-btn" onclick="switchVariant('variant-2')">Вариант 2: Волны</button>
+    <button class="variant-btn" onclick="switchVariant('variant-3')">Вариант 3: Геометрия</button>
+  </div>
+
+  <div class="demo-container">
+    <!-- Оригинальный фон -->
+    <section class="hero-section" id="hero-original">
+      <div class="demo-content">
+        <h1 class="demo-title">Оригинальный фон</h1>
+        <p class="demo-description">Текущий фон с изображением hero_bg.jpg</p>
+        <p>Статичный фон с фотографией</p>
+      </div>
+    </section>
+
+    <!-- Вариант 1: Градиент с частицами -->
+    <section class="hero-section bg-variant-1" id="hero-variant-1">
+      <div class="demo-content">
+        <h1 class="demo-title">Вариант 1: Анимированные частицы</h1>
+        <p class="demo-description">Градиентный фон с плавающими частицами</p>
+        <p>Динамичные светящиеся точки, создающие ощущение движения и технологичности</p>
+      </div>
+    </section>
+
+    <!-- Вариант 2: Анимированные волны -->
+    <section class="hero-section bg-variant-2" id="hero-variant-2">
+      <div class="demo-content">
+        <h1 class="demo-title">Вариант 2: Волновые эффекты</h1>
+        <p class="demo-description">Градиент с анимированными волнами</p>
+        <p>Плавные волновые движения, создающие ощущение потока энергии</p>
+      </div>
+    </section>
+
+    <!-- Вариант 3: Геометрические паттерны -->
+    <section class="hero-section bg-variant-3" id="hero-variant-3">
+      <div class="demo-content">
+        <h1 class="demo-title">Вариант 3: Геометрические паттерны</h1>
+        <p class="demo-description">Градиент с движущимися геометрическими формами</p>
+        <p>Структурированные паттерны, подчеркивающие технологическую суть проекта</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function switchVariant(variant) {
+      // Убираем активный класс со всех кнопок
+      document.querySelectorAll('.variant-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Добавляем активный класс к выбранной кнопке
+      event.target.classList.add('active');
+      
+      // Обновляем название текущего варианта
+      const variantNames = {
+        'original': 'Оригинал',
+        'variant-1': 'Частицы',
+        'variant-2': 'Волны',
+        'variant-3': 'Геометрия'
+      };
+      
+      document.getElementById('current-variant-name').textContent = variantNames[variant];
+      
+      // Прокручиваем к выбранному варианту
+      const targetSection = document.getElementById('hero-' + variant);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    
+    // Устанавливаем активную кнопку по умолчанию
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.variant-btn').classList.add('active');
+    });
+  </script>
+</body>
+</html>
