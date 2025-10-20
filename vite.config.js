@@ -30,7 +30,7 @@ export default defineConfig({
   server: {
     port: 8100,
     host: '0.0.0.0',
-    open: true,
+    open: false,
     cors: true,
     proxy: {
       '/app/api': {
@@ -84,5 +84,50 @@ export default defineConfig({
 
   optimizeDeps: {
     include: ['eslint', 'prettier']
-  }
+  },
+
+  // Middleware для обработки красивых URL
+  plugins: [
+    {
+      name: 'clean-urls',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          const url = req.url;
+          
+          // Если это запрос к API, пропускаем
+          if (url.startsWith('/app/api') || url.startsWith('/api')) {
+            return next();
+          }
+          
+          // Если это статический файл (CSS, JS, изображения), пропускаем
+          if (url.includes('.') && !url.endsWith('/')) {
+            return next();
+          }
+          
+          // Проверяем, есть ли соответствующий HTML файл в pages/
+          const pages = getPages();
+          const pathSegments = url.split('/').filter(Boolean);
+          
+          if (pathSegments.length === 1) {
+            const pageName = pathSegments[0];
+            if (pages[pageName]) {
+              // Перенаправляем на соответствующий HTML файл
+              req.url = `/pages/${pageName}/index.html`;
+              return next();
+            }
+          }
+          
+          // Если это корневой путь или не найденная страница, показываем главную
+          if (url === '/' || url === '') {
+            req.url = '/index.html';
+            return next();
+          }
+          
+          // Для всех остальных случаев показываем главную страницу
+          req.url = '/index.html';
+          next();
+        });
+      }
+    }
+  ]
 });

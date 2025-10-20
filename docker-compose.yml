@@ -1,0 +1,82 @@
+name: beresta-one
+
+services:
+  # Основное приложение (production)
+  beresta-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      tags:
+        - beresta.one:prod
+    container_name: beresta.one-prod
+    ports:
+      - "8100:8100"  # Frontend
+      - "3000:3000"  # API
+    environment:
+      - NODE_ENV=production
+      - PORT=8100
+      - API_PORT=3000
+      - HOST=0.0.0.0
+      - CORS_ORIGIN=http://localhost:8100
+    volumes:
+      - ./app/data:/app/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - beresta-network
+
+  # Development версия с hot reload
+  beresta-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      tags:
+        - beresta.one:latest
+    container_name: beresta.one
+    ports:
+      - "8100:8100"  # Frontend dev
+      - "3100:3000"  # API dev
+    environment:
+      - NODE_ENV=development
+      - PORT=8100
+      - API_PORT=3000
+      - HOST=0.0.0.0
+      - CORS_ORIGIN=http://localhost:8100
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/app/api/node_modules
+      - ./app/data:/app/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - beresta-network
+    profiles:
+      - dev
+
+  # Nginx для production (опционально)
+  nginx:
+    image: nginx:alpine
+    container_name: beresta-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - beresta-app
+    restart: unless-stopped
+    networks:
+      - beresta-network
+    profiles:
+      - nginx
+
+networks:
+  beresta-network:
+    driver: bridge
+
+volumes:
+  app-data:
+  logs:

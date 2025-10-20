@@ -1,0 +1,45 @@
+# Development Dockerfile с hot reload
+FROM node:18-alpine
+
+# Установка системных зависимостей
+RUN apk add --no-cache \
+    git \
+    python3 \
+    make \
+    g++ \
+    curl
+
+# Создание пользователя для безопасности
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S beresta -u 1001
+
+# Рабочая директория
+WORKDIR /app
+
+# Копирование package.json файлов
+COPY package*.json ./
+COPY app/api/package*.json ./app/api/
+
+# Установка всех зависимостей (включая dev)
+RUN npm ci && \
+    cd app/api && npm ci
+
+# Копирование исходного кода
+COPY --chown=beresta:nodejs . .
+
+# Создание директорий для данных и кэша
+RUN mkdir -p /app/app/data /app/logs /app/node_modules/.vite && \
+    chown -R beresta:nodejs /app/app/data /app/logs /app/node_modules
+
+# Для development запускаем от root для избежания проблем с правами
+# USER beresta
+
+# Открытие портов
+EXPOSE 8100 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8100/ || exit 1
+
+# Запуск в режиме разработки
+CMD ["npm", "run", "dev"]
