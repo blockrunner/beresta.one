@@ -1,8 +1,7 @@
 name: Deploy to Production
 
+# Автодеплой при push отключён — используется deploy-pm2.yml. Запуск вручную: Actions → Deploy to Production → Run workflow
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -47,32 +46,8 @@ jobs:
         cp ecosystem.config.js deploy-package/
         cp .env.example deploy-package/.env
         
-        # Create .htaccess for Apache
-        cat > deploy-package/.htaccess << 'EOF'
-        RewriteEngine On
-        
-        # Proxy to Node.js server if available
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule ^(.*)$ http://localhost:3000/$1 [P,L]
-        
-        # Fallback to static files
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule ^([^/]+)/?$ pages/$1/index.html [L]
-        
-        # Cache static files
-        <IfModule mod_expires.c>
-            ExpiresActive On
-            ExpiresByType text/css "access plus 1 year"
-            ExpiresByType application/javascript "access plus 1 year"
-            ExpiresByType image/png "access plus 1 year"
-            ExpiresByType image/jpg "access plus 1 year"
-            ExpiresByType image/jpeg "access plus 1 year"
-            ExpiresByType image/gif "access plus 1 year"
-            ExpiresByType image/svg+xml "access plus 1 year"
-        </IfModule>
-        EOF
+        # Use .htaccess from repo (clean URLs, /app/ rule, cache)
+        cp .htaccess deploy-package/.htaccess
         
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.8.0

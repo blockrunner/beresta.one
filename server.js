@@ -51,6 +51,11 @@ app.use('/locales', express.static(path.join(__dirname, 'locales'), { maxAge: '1
 // API routes
 app.use('/api', require('./app/api/server.js'));
 
+// /app и /app/ — веб-приложение (не pages/app/)
+app.get(['/app', '/app/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'app', 'index.html'));
+});
+
 // Clean URLs - handle /page/ requests
 app.get('/:page', (req, res) => {
   const page = req.params.page;

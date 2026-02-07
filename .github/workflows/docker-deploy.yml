@@ -1,8 +1,8 @@
 name: Docker Build and Deploy
 
+# Автозапуск при push отключён — при пуше в main срабатывает только deploy-pm2.yml. Запуск вручную или при PR при необходимости.
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
   pull_request:
     branches: [ main ]
 

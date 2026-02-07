@@ -1,6 +1,11 @@
 RewriteEngine On
 
-# Обработка чистых URL
+# /app и /app/ — веб-приложение (не pages/app/)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^app/?$ app/index.html [L]
+
+# Обработка чистых URL: /slug/ → pages/slug/index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)/?$ pages/$1/index.html [L]
