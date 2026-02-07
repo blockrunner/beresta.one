@@ -115,13 +115,11 @@ jobs:
       run: |
         # Wait for application to be ready
         sleep 15
-        
-        # Check main page
-        curl -f "http://${{ secrets.SSH_HOST }}/" || exit 1
-        
-        # Check applications page
-        curl -f "http://${{ secrets.SSH_HOST }}/applications/" || exit 1
-        
+        SITE_URL="${{ secrets.SITE_URL }}"
+        if [ -z "$SITE_URL" ]; then SITE_URL="https://beresta.one"; fi
+        echo "Checking $SITE_URL ..."
+        curl -f --retry 2 --connect-timeout 15 --max-time 30 "$SITE_URL/" || exit 1
+        curl -f --retry 2 --connect-timeout 15 --max-time 30 "$SITE_URL/applications/" || exit 1
         echo "✅ Health check passed - application is running"
         
     - name: Show PM2 status
