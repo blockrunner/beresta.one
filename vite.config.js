@@ -108,6 +108,12 @@ export default defineConfig({
           const pages = getPages();
           const pathSegments = url.split('/').filter(Boolean);
           
+          // /app и /app/ — веб-приложение управления устройством
+          if (pathSegments.length === 1 && pathSegments[0] === 'app') {
+            req.url = '/app/index.html';
+            return next();
+          }
+          
           if (pathSegments.length === 1) {
             const pageName = pathSegments[0];
             if (pages[pageName]) {
