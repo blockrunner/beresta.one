@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Зачем hardware-стартапу блокчейн | Beresta Blog</title>
+  <meta name="description" content="Как блокчейн помогает Бересте собирать достоверные данные тестирования со всего мира и почему токен BERS — это не про спекуляции.">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="preload" href="/components/header.html" as="fetch">
+  <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .article-hero { padding: 140px 0 60px; }
+    .article-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.85rem; color: rgba(255,255,255,0.4);
+      text-decoration: none; margin-bottom: 32px; transition: color 0.2s;
+    }
+    .article-back:hover { color: var(--primary-color); }
+    .article-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .article-tag {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 4px 12px; border-radius: 12px;
+      background: rgba(255,215,0,0.1); color: #ffd700;
+    }
+    .article-date { font-size: 0.85rem; color: rgba(255,255,255,0.3); }
+    .article-read-time { font-size: 0.85rem; color: rgba(255,255,255,0.25); }
+    .article-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.2; margin: 0 0 20px; }
+    .article-lead {
+      font-size: 1.15rem; color: rgba(255,255,255,0.6); line-height: 1.75;
+      margin-bottom: 48px; max-width: 700px;
+      border-left: 3px solid #ffd700; padding-left: 20px;
+    }
+    .article-content { max-width: 740px; }
+    .article-content h2 { font-size: 1.5rem; font-weight: 700; margin: 48px 0 16px; }
+    .article-content p { color: rgba(255,255,255,0.7); line-height: 1.85; margin-bottom: 20px; font-size: 1rem; }
+    .article-content strong { color: #fff; }
+    .article-highlight {
+      background: rgba(255,215,0,0.04); border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 12px; padding: 24px 28px; margin: 32px 0;
+    }
+    .article-highlight p { margin: 0; font-size: 1.05rem; color: rgba(255,255,255,0.8); }
+    .flow-steps {
+      display: flex; flex-direction: column; gap: 0; margin: 28px 0;
+    }
+    .flow-step {
+      display: flex; gap: 20px; align-items: flex-start; position: relative;
+    }
+    .flow-step::before {
+      content: ''; position: absolute;
+      left: 19px; top: 44px; bottom: -12px;
+      width: 2px; background: rgba(255,255,255,0.06);
+    }
+    .flow-step:last-child::before { display: none; }
+    .flow-step__num {
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.25);
+      color: #ffd700; font-weight: 700; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 4px;
+    }
+    .flow-step__body { padding-bottom: 28px; }
+    .flow-step__title { font-weight: 700; font-size: 1rem; margin-bottom: 6px; color: #fff; }
+    .flow-step__desc { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    .article-author {
+      display: flex; align-items: center; gap: 20px; padding: 32px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; margin-top: 60px;
+    }
+    .article-author__photo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .article-author__name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .article-author__role { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+    .article-nav {
+      padding: 60px 0 100px; border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 60px; text-align: center;
+    }
+    .article-nav p { color: rgba(255,255,255,0.35); font-size: 0.85rem; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <main class="main-content">
+    <div class="page-wrapper">
+      <article class="article-hero">
+
+        <a href="/blog/" class="article-back">← Все статьи</a>
+
+        <div class="article-meta">
+          <span class="article-tag">Блокчейн</span>
+          <span class="article-date">Март 2025</span>
+          <span class="article-read-time">· 5 мин</span>
+        </div>
+
+        <h1 class="article-title">Зачем hardware-стартапу блокчейн: BERS и глобальная тестовая сеть</h1>
+
+        <p class="article-lead">
+          Кажется, что блокчейн — это про криптовалюты и спекуляции. Но в Бересте он решает конкретную инженерную задачу: как собирать достоверные данные тестирования от тысяч людей по всему миру — без центрального сервера, которому все должны доверять.
+        </p>
+
+        <div class="article-content">
+
+          <p>У Бересты есть проблема, о которой мы говорим открыто: обучение AI-модели и поиск оптимальных алгоритмов вывода информации идут медленно. Потому что данных мало. Потому что тестеров мало. Потому что сейчас тестирование происходит в лабораторных условиях — то есть буквально в одной комнате.</p>
+
+          <p>Чтобы найти алгоритм, который работает для разных людей с разными данными в разных условиях — нужны сотни, а лучше тысячи тестовых сессий. И нужна уверенность в том, что данные достоверны.</p>
+
+          <h2>Проблема доверия к данным</h2>
+
+          <p>Представь: тестер Иван в Москве проводит сессию и сообщает, что паттерн A распознается с точностью 87%. Тестер Maria в Берлине сообщает 45% для того же паттерна. В чем разница? Разные методики? Разные условия? Или кто-то ошибся при заполнении?</p>
+
+          <p>В централизованной системе ты просто надеешься на честность участников. В блокчейне каждая транзакция (каждый результат теста) записывается неизменяемо, с временной меткой и идентификатором участника. Ничего нельзя задним числом исправить или подделать.</p>
+
+          <div class="article-highlight">
+            <p>Блокчейн для Бересты — это не финансовый инструмент. Это протокол доверия для распределенного тестирования.</p>
+          </div>
+
+          <h2>Как работает тестовая сеть</h2>
+
+          <div class="flow-steps">
+            <div class="flow-step">
+              <div class="flow-step__num">1</div>
+              <div class="flow-step__body">
+                <div class="flow-step__title">Регистрация тестера</div>
+                <div class="flow-step__desc">Тестер регистрируется в системе через приложение. Учетная запись фиксируется в блокчейне.</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step__num">2</div>
+              <div class="flow-step__body">
+                <div class="flow-step__title">Проведение сессии</div>
+                <div class="flow-step__desc">Тестер надевает браслет, следует протоколу тестирования — стандартному набору паттернов с фиксацией ответов.</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step__num">3</div>
+              <div class="flow-step__body">
+                <div class="flow-step__title">Запись результатов</div>
+                <div class="flow-step__desc">Результаты (паттерн, точность распознавания, время реакции, параметры сессии) записываются в блокчейн как неизменяемая транзакция.</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step__num">4</div>
+              <div class="flow-step__body">
+                <div class="flow-step__title">Вознаграждение</div>
+                <div class="flow-step__desc">За каждую валидную сессию тестер автоматически получает токены BERS. Не нужно ждать ручного подтверждения.</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step__num">5</div>
+              <div class="flow-step__body">
+                <div class="flow-step__title">Обучение AI</div>
+                <div class="flow-step__desc">Проверенные данные из блокчейна используются для обучения AI-модели. Чем больше данных — тем точнее алгоритм.</div>
+              </div>
+            </div>
+          </div>
+
+          <h2>Что такое токен BERS — и чем он не является</h2>
+
+          <p>BERS — utility-токен. Это означает, что он имеет конкретное применение внутри экосистемы:</p>
+
+          <p><strong>Оплата транзакций</strong> в тестовой сети — небольшой «газ» за запись данных в блокчейн. <strong>Доступ к kit</strong> для сборки браслета Береста 4.0. <strong>Голосование</strong> за приоритеты в разработке через DAO-механизм.</p>
+
+          <p>Чем BERS не является: инвестиционным инструментом, обещанием дохода или спекулятивным активом. Мы честны в этом. Наша цель — создать работающую платформу, а не очередной токен.</p>
+
+          <h2>Зачем это важно для проекта в целом</h2>
+
+          <p>Блокчейн-сеть позволяет нам масштабироваться без доверия к центральному оператору. Тестер в Токио и тестер в Сан-Паулу вносят одинаково верифицированные данные. Это принципиально меняет скорость обучения модели.</p>
+
+          <p>Кроме того, это делает проект международным по своей природе. Любой человек с браслетом и смартфоном может участвовать. Это особенно важно для нас: мы хотим строить глобальную платформу, а не продукт для одного рынка.</p>
+
+          <p>Если хочешь стать одним из первых тестеров и участников тестовой сети — оставляй заявку на странице участия. Ранние тестеры получают приоритет при запуске и расширенное вознаграждение в BERS.</p>
+
+          <div class="article-author">
+            <img src="/img/team/anton-berezhkin.png" alt="Антон Березкин" class="article-author__photo">
+            <div>
+              <div class="article-author__name">Антон Березкин</div>
+              <div class="article-author__role">Основатель Бересты · AI Product Manager</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="article-nav">
+        <p>Хочешь участвовать?</p>
+        <a href="/participation/" class="btn btn-primary">Стать участником проекта</a>
+      </div>
+    </div>
+  </main>
+
+  <div class="page-wrapper">
+    <div id="footer-container"></div>
+  </div>
+
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/loadComponents.js" defer></script>
+</body>
+</html>

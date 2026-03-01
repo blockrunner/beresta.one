@@ -4,33 +4,219 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Блог | Beresta</title>
+  <meta name="description" content="Блог проекта Береста: история разработки, технология сенсорного замещения и блокчейн в реальном производстве.">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/animations.css">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .blog-hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .blog-hero__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin-bottom: 16px;
+    }
+
+    .blog-hero__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .blog-hero__sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Posts grid */
+    .posts-section {
+      padding: 40px 0 120px;
+    }
+
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .post-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.3s;
+    }
+
+    .post-card:hover {
+      border-color: rgba(224, 176, 255, 0.25);
+      background: rgba(224, 176, 255, 0.04);
+      transform: translateY(-4px);
+    }
+
+    .post-card__cover {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .post-card__cover--history {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0f3460 100%);
+    }
+
+    .post-card__cover--tech {
+      background: linear-gradient(135deg, #0a0a0a 0%, #0a2e1a 50%, #0a3420 100%);
+    }
+
+    .post-card__cover--blockchain {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1500 50%, #2e2000 100%);
+    }
+
+    .post-card__body {
+      padding: 28px;
+    }
+
+    .post-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .post-card__tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .post-card__tag--story {
+      background: rgba(224, 176, 255, 0.1);
+      color: var(--primary-color);
+    }
+
+    .post-card__tag--tech {
+      background: rgba(0, 255, 170, 0.1);
+      color: var(--secondary-color);
+    }
+
+    .post-card__tag--blockchain {
+      background: rgba(255, 215, 0, 0.1);
+      color: #ffd700;
+    }
+
+    .post-card__date {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .post-card__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      line-height: 1.3;
+    }
+
+    .post-card__excerpt {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      margin: 0 0 20px;
+    }
+
+    .post-card__read {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 640px) {
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Загружаемый хедер -->
   <div id="header-container"></div>
 
   <main class="main-content">
     <div class="page-wrapper">
-      <section class="applications-overview">
-        <h1 class="section-title" style="margin-top: 160px;">Страница в разработке</h1>
-        <h3 style="text-align: center;">
-          Работаем над страницей, она скоро будет готова
-        </h3>
+
+      <section class="blog-hero">
+        <span class="blog-hero__label">Блог / Blog</span>
+        <h1 class="blog-hero__title">История проекта</h1>
+        <p class="blog-hero__sub">Рассказываем о технологии, об ошибках, о находках и о том, зачем мы это все делаем.</p>
       </section>
 
-      <section class="application-grid">
-        
-        
+      <section class="posts-section">
+        <div class="posts-grid">
 
-        <div class="application-card">
-  <img src="/img/404.jpg" alt="404">
+          <a href="/blog/posts/history/" class="post-card">
+            <div class="post-card__cover post-card__cover--history">🦾</div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__tag post-card__tag--story">Founder Story</span>
+                <span class="post-card__date">Март 2025</span>
+              </div>
+              <h2 class="post-card__title">Как мы дошли до Бересты 3.2: пять лет, три прототипа, один урок</h2>
+              <p class="post-card__excerpt">Первый прототип обжигал кожу. Второй разваливался. Третий заработал. Вот что мы узнали за пять лет разработки тактильного браслета.</p>
+              <span class="post-card__read">Читать статью →</span>
+            </div>
+          </a>
+
+          <a href="/blog/posts/technology/" class="post-card">
+            <div class="post-card__cover post-card__cover--tech">🧠</div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__tag post-card__tag--tech">Технология</span>
+                <span class="post-card__date">Март 2025</span>
+              </div>
+              <h2 class="post-card__title">Сенсорное замещение: почему мозг умеет учиться новым чувствам</h2>
+              <p class="post-card__excerpt">Ученые доказали это еще в 1969 году, но технологии наконец догнали науку. Объясняем нейропластичность так, чтобы было понятно без диплома.</p>
+              <span class="post-card__read">Читать статью →</span>
+            </div>
+          </a>
+
+          <a href="/blog/posts/blockchain/" class="post-card">
+            <div class="post-card__cover post-card__cover--blockchain">⛓️</div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__tag post-card__tag--blockchain">Блокчейн</span>
+                <span class="post-card__date">Март 2025</span>
+              </div>
+              <h2 class="post-card__title">Зачем hardware-стартапу блокчейн: BERS и глобальная тестовая сеть</h2>
+              <p class="post-card__excerpt">Кажется, что блокчейн — это про криптовалюты. Но в Бересте он решает совсем другую задачу: как проверить результаты тысяч тестеров по всему миру.</p>
+              <span class="post-card__read">Читать статью →</span>
+            </div>
+          </a>
+
         </div>
+      </section>
 
-          <!-- Загружаемый футер -->
+    </div>
+  </main>
+
   <div class="page-wrapper">
     <div id="footer-container"></div>
   </div>
@@ -39,4 +225,3 @@
   <script src="/js/loadComponents.js" defer></script>
 </body>
 </html>
-

@@ -4,33 +4,499 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Дорожная карта | Beresta</title>
+  <meta name="description" content="Дорожная карта Бересты: от первого прототипа до платформы. История разработки и планы на Береста 4.0.">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/animations.css">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .roadmap-hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .roadmap-hero__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin-bottom: 16px;
+    }
+
+    .roadmap-hero__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .roadmap-hero__sub {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    /* Progress bar */
+    .progress-section {
+      padding: 40px 0 80px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-header__title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .progress-header__pct {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .progress-bar__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+      border-radius: 4px;
+      transition: width 1.2s ease;
+    }
+
+    .progress-milestones {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .milestone-mini {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .milestone-mini--done {
+      border-color: rgba(0, 255, 170, 0.2);
+    }
+
+    .milestone-mini--active {
+      border-color: rgba(224, 176, 255, 0.25);
+      background: rgba(224, 176, 255, 0.04);
+    }
+
+    .milestone-mini__icon {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .milestone-mini__label {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.4;
+    }
+
+    .milestone-mini--done .milestone-mini__label {
+      color: var(--secondary-color);
+    }
+
+    .milestone-mini--active .milestone-mini__label {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    /* Timeline */
+    .timeline-section {
+      padding: 60px 0 80px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .timeline-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 56px;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .timeline-entry {
+      position: relative;
+      margin-bottom: 56px;
+    }
+
+    .timeline-entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-entry__dot {
+      position: absolute;
+      left: -40px;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #0a0a0a;
+    }
+
+    .timeline-entry__dot--done {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .timeline-entry__dot--active {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: 0 0 12px rgba(224, 176, 255, 0.3);
+    }
+
+    .timeline-entry__dot--planned {
+      border-color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.25);
+    }
+
+    .timeline-entry__date {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 8px;
+    }
+
+    .timeline-entry__header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .timeline-entry__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .timeline-entry__status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .timeline-entry__status--done {
+      background: rgba(0, 255, 170, 0.1);
+      color: var(--secondary-color);
+    }
+
+    .timeline-entry__status--active {
+      background: rgba(224, 176, 255, 0.12);
+      color: var(--primary-color);
+    }
+
+    .timeline-entry__status--planned {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.35);
+    }
+
+    .timeline-entry__desc {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .timeline-entry__checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .timeline-entry__checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .check-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .check-icon--done {
+      background: var(--secondary-color);
+      color: #000;
+    }
+
+    .check-icon--active {
+      background: rgba(224, 176, 255, 0.2);
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .check-icon--planned {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Next steps */
+    .next-section {
+      padding: 80px 0 120px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+
+    .next-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .next-section p {
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 32px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 640px) {
+      .progress-milestones {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .timeline {
+        padding-left: 28px;
+      }
+
+      .timeline-entry__dot {
+        left: -28px;
+        width: 18px;
+        height: 18px;
+        font-size: 0.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Загружаемый хедер -->
   <div id="header-container"></div>
 
   <main class="main-content">
     <div class="page-wrapper">
-      <section class="applications-overview">
-        <h1 class="section-title" style="margin-top: 160px;">Страница в разработке</h1>
-        <h3 style="text-align: center;">
-          Работаем над страницей, она скоро будет готова
-        </h3>
+
+      <!-- Hero -->
+      <section class="roadmap-hero">
+        <span class="roadmap-hero__label">Дорожная карта / Roadmap</span>
+        <h1 class="roadmap-hero__title">Путь к платформе</h1>
+        <p class="roadmap-hero__sub">
+          Пять лет разработки, три поколения прототипов, и ясное понимание куда двигаться дальше. Вот где мы были и куда идем.
+        </p>
       </section>
 
-      <section class="application-grid">
-        
-        
-
-        <div class="application-card">
-  <img src="/img/404.jpg" alt="404">
+      <!-- Progress -->
+      <section class="progress-section">
+        <div class="progress-header">
+          <span class="progress-header__title">Прогресс к MVP 4.0</span>
+          <span class="progress-header__pct">55%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" style="width: 55%;"></div>
         </div>
 
-          <!-- Загружаемый футер -->
+        <div class="progress-milestones">
+          <div class="milestone-mini milestone-mini--done">
+            <span class="milestone-mini__icon">✓</span>
+            <span class="milestone-mini__label">Концепция и исследование</span>
+          </div>
+          <div class="milestone-mini milestone-mini--done">
+            <span class="milestone-mini__icon">✓</span>
+            <span class="milestone-mini__label">Рабочий прототип 3.2</span>
+          </div>
+          <div class="milestone-mini milestone-mini--active">
+            <span class="milestone-mini__icon">◉</span>
+            <span class="milestone-mini__label">Разработка платформы 4.0</span>
+          </div>
+          <div class="milestone-mini">
+            <span class="milestone-mini__icon">○</span>
+            <span class="milestone-mini__label">Запуск токена BERS</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Timeline -->
+      <section class="timeline-section">
+        <h2>История и планы</h2>
+
+        <div class="timeline">
+
+          <!-- 2020 -->
+          <div class="timeline-entry">
+            <div class="timeline-entry__dot timeline-entry__dot--done">✓</div>
+            <div class="timeline-entry__date">2020</div>
+            <div class="timeline-entry__header">
+              <span class="timeline-entry__title">Старт проекта · Береста 1.0</span>
+              <span class="timeline-entry__status timeline-entry__status--done">Завершено</span>
+            </div>
+            <p class="timeline-entry__desc">Первый прототип на Arduino. Матрица 8×8 из 64 электродов. Исследование принципов электростимуляции кожи для передачи информации.</p>
+            <ul class="timeline-entry__checklist">
+              <li><span class="check-icon check-icon--done">✓</span>Концепция устройства</li>
+              <li><span class="check-icon check-icon--done">✓</span>Первый прототип на Arduino</li>
+              <li><span class="check-icon check-icon--done">✓</span>Тестирование электростимуляции</li>
+              <li><span class="check-icon check-icon--done">✓</span>Вывод: переход на вибромоторы</li>
+            </ul>
+          </div>
+
+          <!-- 2021–2022 -->
+          <div class="timeline-entry">
+            <div class="timeline-entry__dot timeline-entry__dot--done">✓</div>
+            <div class="timeline-entry__date">2021–2022</div>
+            <div class="timeline-entry__header">
+              <span class="timeline-entry__title">Береста 2.0 → 3.0 → 3.2</span>
+              <span class="timeline-entry__status timeline-entry__status--done">Завершено</span>
+            </div>
+            <p class="timeline-entry__desc">Переход с электродов на вибромоторы. Три итерации конструкции. Разработка веб-интерфейса управления. Подтверждение нейропластичности в ходе тестов.</p>
+            <ul class="timeline-entry__checklist">
+              <li><span class="check-icon check-icon--done">✓</span>128 вибромоторов на силиконовой подложке</li>
+              <li><span class="check-icon check-icon--done">✓</span>Web Bluetooth API управление</li>
+              <li><span class="check-icon check-icon--done">✓</span>Веб-интерфейс с очередью сигналов</li>
+              <li><span class="check-icon check-icon--done">✓</span>Положительная динамика распознавания паттернов</li>
+              <li><span class="check-icon check-icon--done">✓</span>3D-модель устройства</li>
+            </ul>
+          </div>
+
+          <!-- 2023–2024 -->
+          <div class="timeline-entry">
+            <div class="timeline-entry__dot timeline-entry__dot--done">✓</div>
+            <div class="timeline-entry__date">2023–2024</div>
+            <div class="timeline-entry__header">
+              <span class="timeline-entry__title">Платформа и позиционирование</span>
+              <span class="timeline-entry__status timeline-entry__status--done">Завершено</span>
+            </div>
+            <p class="timeline-entry__desc">Разработка концепции открытой платформы. Исследование блокчейн-интеграции. Запуск сайта и публичного позиционирования проекта.</p>
+            <ul class="timeline-entry__checklist">
+              <li><span class="check-icon check-icon--done">✓</span>White Paper и концепция токена BERS</li>
+              <li><span class="check-icon check-icon--done">✓</span>Сайт beresta.one</li>
+              <li><span class="check-icon check-icon--done">✓</span>Telegram-канал и X-аккаунт</li>
+              <li><span class="check-icon check-icon--done">✓</span>Open API концепция</li>
+            </ul>
+          </div>
+
+          <!-- 2025 — активная -->
+          <div class="timeline-entry">
+            <div class="timeline-entry__dot timeline-entry__dot--active">◉</div>
+            <div class="timeline-entry__date">2025 — сейчас</div>
+            <div class="timeline-entry__header">
+              <span class="timeline-entry__title">Береста 4.0 — разработка MVP</span>
+              <span class="timeline-entry__status timeline-entry__status--active">В работе</span>
+            </div>
+            <p class="timeline-entry__desc">Проектирование нового форм-фактора: компактный, повседневный, модульный. Привлечение первых тестеров. Поиск инвестиций для ускорения разработки.</p>
+            <ul class="timeline-entry__checklist">
+              <li><span class="check-icon check-icon--active">◉</span>Техническое задание на Береста 4.0</li>
+              <li><span class="check-icon check-icon--active">◉</span>Поиск hardware-инженера</li>
+              <li><span class="check-icon check-icon--active">◉</span>Программа внешних тестеров</li>
+              <li><span class="check-icon check-icon--active">◉</span>Инвестиционный раунд pre-seed</li>
+              <li><span class="check-icon check-icon--planned">○</span>Первая версия мобильного приложения</li>
+              <li><span class="check-icon check-icon--planned">○</span>Блокчейн-интеграция для тестов</li>
+            </ul>
+          </div>
+
+          <!-- 2026 -->
+          <div class="timeline-entry">
+            <div class="timeline-entry__dot timeline-entry__dot--planned">○</div>
+            <div class="timeline-entry__date">2026</div>
+            <div class="timeline-entry__header">
+              <span class="timeline-entry__title">Запуск глобальной тестовой сети</span>
+              <span class="timeline-entry__status timeline-entry__status--planned">Планируется</span>
+            </div>
+            <p class="timeline-entry__desc">Поставка первых устройств тестерам по всему миру. Запуск блокчейн-реестра результатов тестирования. Pre-sale токена BERS.</p>
+            <ul class="timeline-entry__checklist">
+              <li><span class="check-icon check-icon--planned">○</span>Первая партия Береста 4.0</li>
+              <li><span class="check-icon check-icon--planned">○</span>Блокчейн-сеть для тестов</li>
+              <li><span class="check-icon check-icon--planned">○</span>Pre-sale токена BERS</li>
+              <li><span class="check-icon check-icon--planned">○</span>AI-модель версии 1.0</li>
+              <li><span class="check-icon check-icon--planned">○</span>Открытый SDK и API</li>
+            </ul>
+          </div>
+
+          <!-- 2027+ -->
+          <div class="timeline-entry">
+            <div class="timeline-entry__dot timeline-entry__dot--planned">○</div>
+            <div class="timeline-entry__date">2027+</div>
+            <div class="timeline-entry__header">
+              <span class="timeline-entry__title">Платформа и масштабирование</span>
+              <span class="timeline-entry__status timeline-entry__status--planned">Горизонт</span>
+            </div>
+            <p class="timeline-entry__desc">Береста как открытая платформа для тактильных интерфейсов. Партнерства с медицинскими, спортивными и VR-компаниями. Маркетплейс модулей и сценариев.</p>
+            <ul class="timeline-entry__checklist">
+              <li><span class="check-icon check-icon--planned">○</span>Маркетплейс сценариев использования</li>
+              <li><span class="check-icon check-icon--planned">○</span>Партнерства с индустриями</li>
+              <li><span class="check-icon check-icon--planned">○</span>Серийное производство</li>
+              <li><span class="check-icon check-icon--planned">○</span>Международный рынок</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="next-section">
+        <h2>Хочешь ускорить этот путь?</h2>
+        <p>Каждый тестер, каждый разработчик и каждый инвестор приближает Береста 4.0 на месяцы вперед.</p>
+        <a href="/participation/" class="btn btn-primary" style="margin-right:12px;">Стать участником</a>
+        <a href="/whitepaper/" class="btn btn-secondary">Читать White Paper</a>
+      </section>
+
+    </div>
+  </main>
+
   <div class="page-wrapper">
     <div id="footer-container"></div>
   </div>
@@ -39,4 +505,3 @@
   <script src="/js/loadComponents.js" defer></script>
 </body>
 </html>
-

@@ -3,40 +3,613 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Участие в проекте | Beresta</title>
+  <title>Участие | Beresta</title>
+  <meta name="description" content="Стань частью Бересты: тестер, разработчик, инвестор или амбассадор. Ранние участники получают токены BERS и приоритетный доступ.">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/animations.css">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .part-hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .part-hero__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin-bottom: 16px;
+    }
+
+    .part-hero__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      margin: 0 0 16px;
+      line-height: 1.2;
+    }
+
+    .part-hero__sub {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.15rem;
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .part-hero__highlight {
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 8px;
+      background: rgba(224, 176, 255, 0.08);
+      border: 1px solid rgba(224, 176, 255, 0.2);
+      color: var(--primary-color);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    /* Paths section */
+    .paths-section {
+      padding: 60px 0 100px;
+    }
+
+    .paths-section__intro {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .paths-section__intro h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .paths-section__intro p {
+      color: rgba(255,255,255,0.45);
+      font-size: 1rem;
+    }
+
+    .paths-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .path-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+    }
+
+    .path-card:hover {
+      border-color: rgba(224, 176, 255, 0.25);
+      background: rgba(224, 176, 255, 0.04);
+    }
+
+    .path-card--featured {
+      border-color: rgba(224, 176, 255, 0.2);
+      background: rgba(224, 176, 255, 0.05);
+    }
+
+    .path-card__icon {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .path-card__tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+    }
+
+    .path-card__tag--tester {
+      background: rgba(0, 255, 170, 0.1);
+      color: var(--secondary-color);
+    }
+
+    .path-card__tag--dev {
+      background: rgba(100, 200, 255, 0.1);
+      color: #64c8ff;
+    }
+
+    .path-card__tag--investor {
+      background: rgba(255, 215, 0, 0.1);
+      color: #ffd700;
+    }
+
+    .path-card__tag--ambassador {
+      background: rgba(255, 150, 100, 0.1);
+      color: #ff9664;
+    }
+
+    .path-card__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+
+    .path-card__desc {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+
+    .path-card__reward {
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+    }
+
+    .path-card__reward-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
+
+    .path-card__reward-text {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.8);
+      font-weight: 600;
+    }
+
+    .path-card__btn {
+      display: block;
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.25s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .path-card__btn--primary {
+      background: var(--primary-color);
+      color: #000;
+    }
+
+    .path-card__btn--primary:hover {
+      background: #fff;
+    }
+
+    .path-card__btn--secondary {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .path-card__btn--secondary:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      background: rgba(224, 176, 255, 0.05);
+    }
+
+    /* Form section */
+    .form-section {
+      padding: 80px 0 120px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .form-section__inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .form-section__header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .form-section__header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .form-section__header p {
+      color: rgba(255,255,255,0.45);
+      font-size: 1rem;
+    }
+
+    .participation-form {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 48px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .form-group select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='rgba(255,255,255,0.4)' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form-group select option {
+      background: #1a1a2e;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(255,255,255,0.25);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: none;
+      background: var(--primary-color);
+      color: #000;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-top: 8px;
+    }
+
+    .form-submit:hover {
+      background: #fff;
+    }
+
+    .form-note {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .form-success__icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .form-success h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .form-success p {
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Social share */
+    .share-section {
+      padding: 60px 0 100px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .share-section h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .share-section p {
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 28px;
+    }
+
+    .share-btns {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      transition: all 0.25s;
+    }
+
+    .share-btn:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .share-btn--tg {
+      background: rgba(0, 136, 204, 0.1);
+      border-color: rgba(0, 136, 204, 0.3);
+      color: #29b6f6;
+    }
+
+    .share-btn--tg:hover {
+      background: rgba(0, 136, 204, 0.2);
+      color: #29b6f6;
+      border-color: #29b6f6;
+    }
+
+    @media (max-width: 768px) {
+      .paths-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .participation-form {
+        padding: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Загружаемый хедер -->
   <div id="header-container"></div>
 
   <main class="main-content">
     <div class="page-wrapper">
-      <section class="applications-overview">
-        <h1 class="section-title" style="margin-top: 160px;">Страница в разработке</h1>
-        <h3 style="text-align: center;">
-          Работаем над страницей, она скоро будет готова
-        </h3>
+
+      <!-- Hero -->
+      <section class="part-hero">
+        <span class="part-hero__label">Участие / Participation</span>
+        <h1 class="part-hero__title">Войди в историю вместе с нами</h1>
+        <p class="part-hero__sub">
+          Береста создает новое чувство для человека. Это открытый проект и нам нужны люди — тестеры, разработчики, инвесторы и амбассадоры. Ранние участники получают привилегии и вознаграждения.
+        </p>
+        <span class="part-hero__highlight">Ранний доступ · Токены BERS · История проекта</span>
       </section>
 
-      <section class="application-grid">
-        
-        
-
-        <div class="application-card">
-  <img src="/img/404.jpg" alt="404">
+      <!-- 4 Paths -->
+      <section class="paths-section">
+        <div class="paths-section__intro">
+          <h2>Выбери свою роль</h2>
+          <p>Каждая роль ценна. Все ранние участники фиксируются в реестре проекта.</p>
         </div>
 
-          <!-- Загружаемый футер -->
+        <div class="paths-grid">
+
+          <!-- Тестер -->
+          <div class="path-card path-card--featured">
+            <span class="path-card__icon">🧪</span>
+            <span class="path-card__tag path-card__tag--tester">Самый важный</span>
+            <h3 class="path-card__title">Тестер</h3>
+            <p class="path-card__desc">
+              Получаешь браслет Береста 3.2 для тестирования. Проводишь сессии обучения и передаешь результаты в блокчейн-реестр проекта. Каждая сессия теста — это вклад в обучение AI-модели и поиск лучших алгоритмов.
+            </p>
+            <div class="path-card__reward">
+              <div class="path-card__reward-label">Награда</div>
+              <div class="path-card__reward-text">Токены BERS за каждую сессию · Приоритет на Береста 4.0 · Имя в списке первых тестеров</div>
+            </div>
+            <a href="#participation-form" class="path-card__btn path-card__btn--primary">Записаться в тестеры</a>
+          </div>
+
+          <!-- Разработчик -->
+          <div class="path-card">
+            <span class="path-card__icon">⚙️</span>
+            <span class="path-card__tag path-card__tag--dev">Нужны навыки</span>
+            <h3 class="path-card__title">Разработчик</h3>
+            <p class="path-card__desc">
+              Вносишь вклад в код, алгоритмы или конструкцию. Hardware-инженеры, ML-специалисты, мобильные разработчики. Открытый API позволяет создавать собственные интерфейсы и сценарии использования браслета.
+            </p>
+            <div class="path-card__reward">
+              <div class="path-card__reward-label">Награда</div>
+              <div class="path-card__reward-text">Токены BERS за вклад · Опен-соурс кредиты · Доступ к документации и API</div>
+            </div>
+            <a href="#participation-form" class="path-card__btn path-card__btn--secondary">Предложить помощь</a>
+          </div>
+
+          <!-- Инвестор -->
+          <div class="path-card">
+            <span class="path-card__icon">🌱</span>
+            <span class="path-card__tag path-card__tag--investor">Финансовая поддержка</span>
+            <h3 class="path-card__title">Инвестор / Спонсор</h3>
+            <p class="path-card__desc">
+              Поддерживаешь разработку финансово. Инвестиции направляются на разработку Береста 4.0, расширение команды и запуск глобальной тестовой сети. Принимаем крипто (USDT, BTC) и другие форматы.
+            </p>
+            <div class="path-card__reward">
+              <div class="path-card__reward-label">Награда</div>
+              <div class="path-card__reward-text">Токены BERS · Доступ к kit сборки устройства · Участие в голосовании за roadmap</div>
+            </div>
+            <a href="/whitepaper/" class="path-card__btn path-card__btn--secondary">Читать White Paper</a>
+          </div>
+
+          <!-- Амбассадор -->
+          <div class="path-card">
+            <span class="path-card__icon">📢</span>
+            <span class="path-card__tag path-card__tag--ambassador">Сообщество</span>
+            <h3 class="path-card__title">Амбассадор</h3>
+            <p class="path-card__desc">
+              Распространяешь информацию о проекте, привлекаешь новых участников. Делишься своим рефеальным линком, ведешь обсуждения в Telegram, помогаешь расти сообществу Бересты по всему миру.
+            </p>
+            <div class="path-card__reward">
+              <div class="path-card__reward-label">Награда</div>
+              <div class="path-card__reward-text">Токены BERS за каждого привлеченного · Статус в сообществе · Мерч от проекта</div>
+            </div>
+            <a href="https://t.me/berestadotone" target="_blank" rel="noopener" class="path-card__btn path-card__btn--secondary">Вступить в Telegram</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Form -->
+      <section class="form-section" id="participation-form">
+        <div class="form-section__inner">
+          <div class="form-section__header">
+            <h2>Оставить заявку</h2>
+            <p>Заполни форму — свяжемся с тобой в течение 48 часов.</p>
+          </div>
+
+          <div class="participation-form">
+            <div id="form-body">
+              <form id="partForm" action="https://formspree.io/f/contact@beresta.one" method="POST" onsubmit="handleFormSubmit(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="fname">Имя *</label>
+                    <input type="text" id="fname" name="name" placeholder="Иван" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="femail">Email *</label>
+                    <input type="email" id="femail" name="email" placeholder="ivan@example.com" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="frole">Роль *</label>
+                  <select id="frole" name="role" required>
+                    <option value="" disabled selected>Выбери свою роль...</option>
+                    <option value="tester">Тестер — хочу протестировать браслет</option>
+                    <option value="developer">Разработчик — могу помочь с кодом или железом</option>
+                    <option value="investor">Инвестор / Спонсор — готов поддержать финансово</option>
+                    <option value="ambassador">Амбассадор — буду распространять информацию</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="ftg">Telegram (необязательно)</label>
+                  <input type="text" id="ftg" name="telegram" placeholder="@username">
+                </div>
+
+                <div class="form-group">
+                  <label for="fmsg">Расскажи о себе</label>
+                  <textarea id="fmsg" name="message" placeholder="Как ты можешь помочь проекту? Почему заинтересован?"></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">Отправить заявку</button>
+                <p class="form-note">Не продаем и не передаем данные третьим лицам. Только связь по проекту.</p>
+              </form>
+            </div>
+
+            <div class="form-success" id="form-success">
+              <div class="form-success__icon">🎉</div>
+              <h3>Заявка принята!</h3>
+              <p>Мы свяжемся с тобой в течение 48 часов.<br>А пока — присоединяйся к нашему Telegram-каналу.</p>
+              <a href="https://t.me/berestadotone" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:20px;">Открыть Telegram</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Share -->
+      <section class="share-section">
+        <h2>Расскажи друзьям</h2>
+        <p>Каждое упоминание приближает проект к реальному устройству. Это занимает 10 секунд.</p>
+        <div class="share-btns">
+          <a href="https://t.me/share/url?url=https://beresta.one&text=Береста%20—%20тактильный%20киберимплант%20без%20скальпеля.%20Новое%20чувство%20для%20человека!" target="_blank" rel="noopener" class="share-btn share-btn--tg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+            Поделиться в Telegram
+          </a>
+          <a href="https://twitter.com/intent/tweet?text=Береста%20—%20тактильный%20браслет%20с%20нейропластичностью%20и%20AI.%20Новое%20чувство%20для%20человека!&url=https://beresta.one" target="_blank" rel="noopener" class="share-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Поделиться в X
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
   <div class="page-wrapper">
     <div id="footer-container"></div>
   </div>
+
+  <script>
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('partForm');
+      const data = new FormData(form);
+
+      fetch('https://formspree.io/f/contact@beresta.one', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(res => {
+        document.getElementById('form-body').style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      }).catch(() => {
+        alert('Ошибка отправки. Напишите нам напрямую: contact@beresta.one');
+      });
+    }
+  </script>
 
   <script src="/js/i18n.js" defer></script>
   <script src="/js/loadComponents.js" defer></script>
 </body>
 </html>
-

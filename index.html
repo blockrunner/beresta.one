@@ -16,7 +16,7 @@
   <main class="main-content">
     <div class="page-wrapper">
       <!-- Hero-секция -->
-      <section class="hero-section">
+      <section class="hero-section bg-variant-1">
         <div class="hero-inner">
           <div class="hero-content">
              <h1 class="hero-title">Твой киберимплант без скальпеля</h1>
@@ -33,10 +33,12 @@
       </section>
 
       <!-- Что такое Береста -->
-      <section class="intro-section" style="background: url('/img/intro-bg.png') center/cover no-repeat;">
-        <h2 class="section-title" style="text-align: left;">Что такое Береста?</h2>
-        <p class="section-description">Носимое устройство, дополняющее восприятие с помощью<br>тактильных ощущений и AI-интерпретации окружающего мира.</p>
-        <a href="/technology/" class="btn btn-secondary">Подробнее о технологии</a>
+      <section class="intro-section">
+        <div>
+          <h2 class="section-title" style="text-align: left;">Что такое Береста?</h2>
+          <p class="section-description" style="color: #bbb; font-size: 1.1rem; line-height: 1.7; margin-bottom: 28px;">Носимое устройство, дополняющее восприятие с помощью<br>тактильных ощущений и AI-интерпретации окружающего мира.</p>
+          <a href="/technology/" class="btn btn-secondary">Подробнее о технологии</a>
+        </div>
       </section>
       
       <!-- Чувствуй больше -->
@@ -46,7 +48,7 @@
       </section>
 
       <!-- Как это работает -->
-      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+      <section id="how-it-works" class="steps-section dot-grid-section" style="background: var(--bg-dark);">
         <h2 class="section-title" style="text-align: center;">Как это работает?</h2>
         <div class="steps-container">
           <div class="step"><img src="/img/step1-icon.png" alt="Получение данных"><h3>Получение данных</h3><p>Браслет получает изображения, текст или звук с устройства</p></div>
@@ -59,13 +61,13 @@
       </section>
 
         <!-- Научное обоснование -->
-      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+      <section class="steps-section dot-grid-section" style="background: var(--bg-dark);">
         <h2 class="section-title" style="text-align: center;">Научный фундамент</h2>
-        <p>🧬 «Мозг способен обрабатывать новую сенсорную информацию и создавать новые каналы восприятия — это доказано на примерах тактильной визуализации и магнитной ориентации у человека».
-→ Источник: Bach-y-Rita et al., Nature, 1969</p>
-        <p>🧠 «Обучение новому чувству — это навык, требующий времени и внимания, но со временем ощущается как "естественное чувство".»
-→ Источник: Neuroplasticity and Sensory Substitution, 2003</p>
-      <div style="text-align: center; margin-top: 60px;">
+        <div class="science-quote">🧬 «Мозг способен обрабатывать новую сенсорную информацию и создавать новые каналы восприятия — это доказано на примерах тактильной визуализации и магнитной ориентации у человека». <span style="color: #666;">→ Источник: Bach-y-Rita et al., Nature, 1969</span></div>
+        <div class="science-quote">🧠 «Обучение новому чувству — это навык, требующий времени и внимания, но со временем ощущается как "естественное чувство".» <span style="color: #666;">→ Источник: Neuroplasticity and Sensory Substitution, 2003</span></div>
+        <div class="science-quote">🔬 «Зрительная кора мозга может активироваться при тактильной стимуляции у слепых — демонстрация мощных механизмов нейропластичности.» <span style="color: #666;">→ Источник: Amedi et al., Sensory Substitution and Brain Reorganization, 2007</span></div>
+        <div class="science-quote">🧪 «Мозг способен интегрировать альтернативные источники сенсорной информации и формировать когнитивные модели окружающего мира.» <span style="color: #666;">→ Источник: Proulx, Multisensory Integration, 2008</span></div>
+        <div style="text-align: center; margin-top: 48px;">
           <a href="/technology/#science" class="btn btn-secondary">Больше статей</a>
         </div>
       </section>
@@ -75,28 +77,36 @@
         <h2 class="section-title">Где применяется Береста?</h2>
         <div class="application-cards">
           <div class="application-card">
-            <img src="/img/app-navigation.png" alt="Навигация">
-            <h3>Навигация</h3>
-            <p>Тактильные подсказки направления и расстояния позволяют перемещаться без необходимости смотреть в экран. Особенно полезно для ситуаций, где важна внимательность: вождения, спорта, туризма.</p>
+            <img src="/img/app-navigation.jpg" alt="Навигация">
+            <div class="application-card-content">
+              <h3>Навигация</h3>
+              <p>Тактильные подсказки направления и расстояния позволяют перемещаться без необходимости смотреть в экран. Особенно полезно для ситуаций, где важна внимательность: вождения, спорта, туризма.</p>
+            </div>
           </div>
           <div class="application-card">
             <img src="/img/app-notifications.jpg" alt="Уведомления">
-            <h3>Уведомления</h3>
-            <p>Береста передаёт важные сигналы с мессенджеров, вызовов или приложений прямо на кожу, не отвлекая от текущей деятельности. Уровень срочности различается по паттерну.</p>
+            <div class="application-card-content">
+              <h3>Уведомления</h3>
+              <p>Береста передаёт важные сигналы с мессенджеров, вызовов или приложений прямо на кожу, не отвлекая от текущей деятельности. Уровень срочности различается по паттерну.</p>
+            </div>
           </div>
           <div class="application-card">
             <img src="/img/app-sports.jpg" alt="Спорт и тренировки">
-            <h3>Спорт и тренировки</h3>
-            <p>Передача команд тренера, ритма или состояния организма в реальном времени позволяет лучше контролировать технику и достигать лучших результатов без визуальных отвлечений.</p>
+            <div class="application-card-content">
+              <h3>Спорт и тренировки</h3>
+              <p>Передача команд тренера, ритма или состояния организма в реальном времени позволяет лучше контролировать технику и достигать лучших результатов без визуальных отвлечений.</p>
+            </div>
           </div>
           <div class="application-card">
             <img src="/img/app-music.jpg" alt="Музыка">
-            <h3>Музыка</h3>
-            <p>Погружение в музыку через вибрации — это не просто альтернатива аудио, а новый способ переживания звука телом. Особенно интересно для саунд-дизайнеров и пользователей с нарушением слуха.</p>
+            <div class="application-card-content">
+              <h3>Музыка</h3>
+              <p>Погружение в музыку через вибрации — это не просто альтернатива аудио, а новый способ переживания звука телом. Особенно интересно для саунд-дизайнеров и пользователей с нарушением слуха.</p>
+            </div>
           </div>
         </div>
-        <div style="text-align: center; margin-top: 60px; margin-bottom: 80px;">
-        <a href="/applications/" class="btn btn-secondary">Все сценарии</a>
+        <div style="text-align: center; margin-top: 48px; margin-bottom: 80px;">
+          <a href="/applications/" class="btn btn-secondary">Все сценарии</a>
         </div>
       </section>
 
@@ -111,13 +121,14 @@
       </section>
 
       <!-- Технология двух сигналов -->
-      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+      <section class="steps-section dot-grid-section" style="background: var(--bg-dark);">
         <h2 class="section-title" style="text-align: center;">Технология двух сигналов</h2>
-        <p>Широкий диапазон ощущений</p>
-        <p>Стимуляция поверхностных и глубоких рецепторов</p>
-        <p>Эффект присутствия и телесной памяти</p>
-        <p>Возможность передавать сложные сигналы — от импульсов до «эмоций»</p>
-        
+        <ul class="dual-signal-list">
+          <li>Широкий диапазон ощущений — от лёгкого прикосновения до глубокого импульса</li>
+          <li>Стимуляция поверхностных и глубоких рецепторов одновременно</li>
+          <li>Эффект присутствия и телесной памяти при регулярном использовании</li>
+          <li>Возможность передавать сложные сигналы — от импульсов до «эмоций»</li>
+        </ul>
       </section>
 
       <!-- Прототип -->
@@ -149,16 +160,36 @@
       </section>
 
       <!-- Участие -->
-      <section id="how-it-works" class="steps-section" style="background: var(--bg-dark);">
+      <section class="steps-section" style="background: var(--bg-dark);">
         <h2 class="section-title" style="text-align: center;">Прими участие в проекте</h2>
-        <p>Стать инвестором</p>
-        <p>Поддержка на раннем этапе</p>
-        <p>Присоединиться к тест-группе</p>
-        <p>Присоединиться к команде</p>
-        <p>Вступить в сообщество</p>
-        <p>Другие форматы участия - куда обращаться</p>
-        <div style="text-align: center; margin-top: 60px; margin-bottom: 80px;">
-        <a href="/participation/" class="btn btn-secondary">Участвовать в проекте</a>
+        <div class="participation-grid">
+          <div class="participation-card">
+            <h4>Стать инвестором</h4>
+            <p>Поддержка на раннем этапе — войти в проект до публичного раунда</p>
+          </div>
+          <div class="participation-card">
+            <h4>Присоединиться к тест-группе</h4>
+            <p>Первыми попробовать устройство и дать обратную связь по ощущениям</p>
+          </div>
+          <div class="participation-card">
+            <h4>Присоединиться к команде</h4>
+            <p>Мы ищем инженеров, дизайнеров и исследователей нейронаук</p>
+          </div>
+          <div class="participation-card">
+            <h4>Вступить в сообщество</h4>
+            <p>Telegram и X — обсуждаем развитие технологии, делимся прогрессом</p>
+          </div>
+          <div class="participation-card">
+            <h4>Разработчику</h4>
+            <p>SDK, Web Bluetooth API, open hardware specs — создавай свои паттерны</p>
+          </div>
+          <div class="participation-card">
+            <h4>Другие форматы</h4>
+            <p>Медиапартнёрство, исследовательское сотрудничество, гранты — пиши нам</p>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 8px; margin-bottom: 80px;">
+          <a href="/participation/" class="btn btn-secondary">Участвовать в проекте</a>
         </div>
       </section>
 

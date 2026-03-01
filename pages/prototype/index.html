@@ -4,39 +4,700 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Прототип | Beresta</title>
+  <meta name="description" content="Береста 3.2 — рабочий прототип тактильного браслета с 128 вибромоторами. История разработки от версии 1 до 4.0.">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/animations.css">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .proto-hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .proto-hero__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin-bottom: 16px;
+    }
+
+    .proto-hero__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .proto-hero__sub {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .proto-hero__badges {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .badge--green {
+      background: rgba(0, 255, 170, 0.12);
+      color: var(--secondary-color);
+      border: 1px solid rgba(0, 255, 170, 0.3);
+    }
+
+    .badge--purple {
+      background: rgba(224, 176, 255, 0.1);
+      color: var(--primary-color);
+      border: 1px solid rgba(224, 176, 255, 0.25);
+    }
+
+    /* Current prototype section */
+    .current-proto {
+      padding: 60px 0 80px;
+    }
+
+    .current-proto__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .current-proto__visual {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(224, 176, 255, 0.12);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .proto-model {
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .proto-model__placeholder {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 40% 40%, rgba(224, 176, 255, 0.15) 0%, transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(0, 255, 170, 0.08) 0%, transparent 50%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+    }
+
+    .proto-model__caption {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+
+    .current-proto__info h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+
+    .current-proto__version {
+      color: var(--secondary-color);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .current-proto__desc {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    /* Spec table */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 32px;
+    }
+
+    .spec-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .spec-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.95rem;
+    }
+
+    .spec-table td:first-child {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+    }
+
+    .spec-table td:last-child {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Version history */
+    .versions-section {
+      padding: 80px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .versions-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .versions-section__sub {
+      text-align: center;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 56px;
+    }
+
+    .versions-timeline {
+      display: grid;
+      gap: 0;
+    }
+
+    .version-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0;
+      position: relative;
+    }
+
+    .version-item__marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-right: 32px;
+    }
+
+    .version-item__dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      border: 2px solid;
+      margin-bottom: 0;
+    }
+
+    .version-item__dot--done {
+      background: rgba(0, 255, 170, 0.12);
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .version-item__dot--current {
+      background: rgba(224, 176, 255, 0.15);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .version-item__dot--future {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.3);
+    }
+
+    .version-item__line {
+      flex: 1;
+      width: 2px;
+      background: rgba(255,255,255,0.07);
+      margin: 4px auto;
+    }
+
+    .version-item:last-child .version-item__line {
+      display: none;
+    }
+
+    .version-item__content {
+      padding-bottom: 48px;
+    }
+
+    .version-item:last-child .version-item__content {
+      padding-bottom: 0;
+    }
+
+    .version-item__header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding-top: 10px;
+    }
+
+    .version-item__name {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .version-item__status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .version-item__status--done {
+      background: rgba(0, 255, 170, 0.1);
+      color: var(--secondary-color);
+    }
+
+    .version-item__status--active {
+      background: rgba(224, 176, 255, 0.12);
+      color: var(--primary-color);
+    }
+
+    .version-item__status--planned {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .version-item__desc {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .version-item__tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tech-tag {
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Comparison table */
+    .comparison-section {
+      padding: 80px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .comparison-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .comparison-table th {
+      background: rgba(255,255,255,0.05);
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .comparison-table th:nth-child(2) {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .comparison-table th:nth-child(3) {
+      color: var(--primary-color);
+    }
+
+    .comparison-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.95rem;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table td:first-child {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+    }
+
+    .comparison-table td:nth-child(2) {
+      color: rgba(255,255,255,0.45);
+    }
+
+    .comparison-table td:nth-child(3) {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    /* CTA section */
+    .proto-cta {
+      padding: 80px 0 120px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .proto-cta h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .proto-cta p {
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .current-proto__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .version-item {
+        grid-template-columns: 60px 1fr;
+      }
+
+      .version-item__marker {
+        padding-right: 16px;
+      }
+
+      .version-item__dot {
+        width: 36px;
+        height: 36px;
+        font-size: 0.75rem;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Загружаемый хедер -->
   <div id="header-container"></div>
 
   <main class="main-content">
     <div class="page-wrapper">
-      <section class="applications-overview">
-        <h1 class="section-title" style="margin-top: 160px;">Страница в разработке</h1>
-        <h3 style="text-align: center;">
-          Работаем над страницей, она скоро будет готова
-        </h3>
+
+      <!-- Hero -->
+      <section class="proto-hero">
+        <span class="proto-hero__label">Прототип / Prototype</span>
+        <h1 class="proto-hero__title">Это реально работает</h1>
+        <p class="proto-hero__sub">
+          Береста существует в металле, кремнии и коде уже пять лет.
+          Три поколения прототипов. Сотни часов тестирования. Браслет сейчас у нас на руках.
+        </p>
+        <div class="proto-hero__badges">
+          <span class="badge badge--green">Рабочий прототип</span>
+          <span class="badge badge--purple">128 вибромоторов</span>
+          <span class="badge badge--green">Web Bluetooth API</span>
+          <span class="badge badge--purple">Береста 4.0 в разработке</span>
+        </div>
       </section>
 
-      <section class="application-grid">
-        
-        
+      <!-- Current prototype -->
+      <section class="current-proto">
+        <div class="current-proto__grid">
+          <div class="current-proto__visual">
+            <div class="proto-model">
+              <div class="proto-model__placeholder">🦾</div>
+            </div>
+            <model-viewer
+              src="/models/beresta.glb"
+              alt="Береста 3.2"
+              auto-rotate
+              camera-controls
+              style="width:100%;height:320px;--poster-color:transparent;"
+              loading="lazy"
+            ></model-viewer>
+            <p class="proto-model__caption">Береста 3.2 — актуальная версия устройства</p>
+          </div>
 
-        <div class="application-card">
-  <img src="/img/404.jpg" alt="404">
+          <div class="current-proto__info">
+            <div class="current-proto__version">Актуальная версия</div>
+            <h2>Береста 3.2</h2>
+            <p class="current-proto__desc">
+              128 вибромоторов на силиконовой подложке, управляемых через 8 промежуточных плат с помощью программируемого микроконтроллера. Сигналы дублируются на компактный дисплей. Управление через веб-интерфейс по протоколу Web Bluetooth API.
+            </p>
+
+            <table class="spec-table">
+              <thead>
+                <tr>
+                  <th>Параметр</th>
+                  <th>Значение</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Вибромоторы</td>
+                  <td>128 шт, матрица 8×16</td>
+                </tr>
+                <tr>
+                  <td>Вес</td>
+                  <td>704 г (браслет + блок питания)</td>
+                </tr>
+                <tr>
+                  <td>Габариты браслета</td>
+                  <td>295 × 120 × 35 мм</td>
+                </tr>
+                <tr>
+                  <td>Уровень шума (макс.)</td>
+                  <td>71 дБ-A (без контакта с поверхностью)</td>
+                </tr>
+                <tr>
+                  <td>Управление</td>
+                  <td>Web Bluetooth API, веб-интерфейс</td>
+                </tr>
+                <tr>
+                  <td>Дисплей</td>
+                  <td>Дублирует тактильные сигналы визуально</td>
+                </tr>
+                <tr>
+                  <td>Форм-фактор</td>
+                  <td>Лабораторный (тестирование)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <a href="/app/" class="btn btn-primary" style="margin-right:12px;">Открыть Web App</a>
+            <a href="/participation/" class="btn btn-secondary">Стать тестером</a>
+          </div>
         </div>
+      </section>
 
-          <!-- Загружаемый футер -->
+      <!-- Version history -->
+      <section class="versions-section">
+        <h2>История версий</h2>
+        <p class="versions-section__sub">Каждое поколение — это новые уроки и шаг к реальному устройству</p>
+
+        <div class="versions-timeline">
+
+          <!-- Береста 1 -->
+          <div class="version-item">
+            <div class="version-item__marker">
+              <div class="version-item__dot version-item__dot--done">1.0</div>
+              <div class="version-item__line"></div>
+            </div>
+            <div class="version-item__content">
+              <div class="version-item__header">
+                <span class="version-item__name">Береста 1.0</span>
+                <span class="version-item__status version-item__status--done">Завершено</span>
+              </div>
+              <p class="version-item__desc">
+                Arduino + промежуточная плата + матрица из 64 электродов. Передача сигналов с помощью постоянного электрического тока. Тестирование выявило критическую проблему: длительное воздействие тока повреждало кожу и усиливало болевые ощущения, что делало долгосрочное обучение невозможным.
+              </p>
+              <p class="version-item__desc"><strong>Решение:</strong> переход с электродов на вибромоторы.</p>
+              <div class="version-item__tech">
+                <span class="tech-tag">Arduino</span>
+                <span class="tech-tag">64 электрода</span>
+                <span class="tech-tag">Постоянный ток</span>
+                <span class="tech-tag">Матрица 8×8</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Береста 2 -->
+          <div class="version-item">
+            <div class="version-item__marker">
+              <div class="version-item__dot version-item__dot--done">2.0</div>
+              <div class="version-item__line"></div>
+            </div>
+            <div class="version-item__content">
+              <div class="version-item__header">
+                <span class="version-item__name">Береста 2.0</span>
+                <span class="version-item__status version-item__status--done">Завершено</span>
+              </div>
+              <p class="version-item__desc">
+                Замена электродов на вибромоторы. Новая прошивка микроконтроллера. Более длительные тесты показали положительную динамику в распознавании сигнала — мозг начинал адаптироваться к паттернам. Конструкция оказалась ненадежной и неудобной в управлении.
+              </p>
+              <p class="version-item__desc"><strong>Решение:</strong> полный редизайн конструкции → Береста 3.0 → 3.2</p>
+              <div class="version-item__tech">
+                <span class="tech-tag">Вибромоторы</span>
+                <span class="tech-tag">Обновленная прошивка</span>
+                <span class="tech-tag">Подтверждена нейропластичность</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Береста 3.2 -->
+          <div class="version-item">
+            <div class="version-item__marker">
+              <div class="version-item__dot version-item__dot--current">3.2</div>
+              <div class="version-item__line"></div>
+            </div>
+            <div class="version-item__content">
+              <div class="version-item__header">
+                <span class="version-item__name">Береста 3.2</span>
+                <span class="version-item__status version-item__status--active">Текущая версия</span>
+              </div>
+              <p class="version-item__desc">
+                128 вибромоторов, 8 промежуточных плат, программируемый МК. Дисплей дублирует тактильные сигналы. Полноценный веб-интерфейс с управлением очередью сигналов, настройкой длительности, задержек и выбором руки. Подключение через Web Bluetooth API. Активно используется для тестирования паттернов и сбора обучающих данных.
+              </p>
+              <div class="version-item__tech">
+                <span class="tech-tag">128 вибромоторов</span>
+                <span class="tech-tag">8 плат управления</span>
+                <span class="tech-tag">Web Bluetooth API</span>
+                <span class="tech-tag">Веб-интерфейс</span>
+                <span class="tech-tag">Дисплей</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Береста 4.0 -->
+          <div class="version-item">
+            <div class="version-item__marker">
+              <div class="version-item__dot version-item__dot--future">4.0</div>
+            </div>
+            <div class="version-item__content">
+              <div class="version-item__header">
+                <span class="version-item__name">Береста 4.0 — MVP</span>
+                <span class="version-item__status version-item__status--planned">В разработке</span>
+              </div>
+              <p class="version-item__desc">
+                Модульная система, электротактильные актуаторы, платформа с API. Управляющий блок у запястья (до 40 × 10 мм), основная часть — тонкая многослойная структура с LRA-моторами 5×5×5 мм в сетке 7–10 мм. Влагозащита, звукоизоляция, четыре ремешка с равномерным натяжением. Мобильное приложение без установки.
+              </p>
+              <div class="version-item__tech">
+                <span class="tech-tag">Цель: 300 г</span>
+                <span class="tech-tag">Цель: &lt;35 дБ-A</span>
+                <span class="tech-tag">LRA-моторы 5×5×5 мм</span>
+                <span class="tech-tag">Модульная архитектура</span>
+                <span class="tech-tag">Open API</span>
+                <span class="tech-tag">Блокчейн-интеграция</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Comparison -->
+      <section class="comparison-section">
+        <h2>Береста 3.2 → цели для 4.0</h2>
+
+        <div style="overflow-x:auto;">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>Береста 3.2 (сейчас)</th>
+                <th>Береста 4.0 (цель)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Вес</td>
+                <td>704 г</td>
+                <td>≤ 300 г</td>
+              </tr>
+              <tr>
+                <td>Длина</td>
+                <td>417 мм</td>
+                <td>≤ 200 мм</td>
+              </tr>
+              <tr>
+                <td>Толщина</td>
+                <td>35 мм (средняя)</td>
+                <td>≤ 10 мм</td>
+              </tr>
+              <tr>
+                <td>Шум (макс.)</td>
+                <td>71 дБ-A</td>
+                <td>≤ 35 дБ-A</td>
+              </tr>
+              <tr>
+                <td>Шум при контакте</td>
+                <td>76–80 дБ-A</td>
+                <td>≤ 37–39 дБ-A</td>
+              </tr>
+              <tr>
+                <td>Форм-фактор</td>
+                <td>Лабораторный</td>
+                <td>Повседневный, носимый</td>
+              </tr>
+              <tr>
+                <td>Влагозащита</td>
+                <td>Нет</td>
+                <td>Водонепроницаем</td>
+              </tr>
+              <tr>
+                <td>Управление</td>
+                <td>Веб-интерфейс</td>
+                <td>Мобильное приложение + Open API</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="proto-cta">
+        <h2>Стать тестером Береста 3.2</h2>
+        <p>Мы ищем первых внешних тестеров. Участники тестирования получают ранний доступ к Береста 4.0 и вознаграждение в токенах BERS.</p>
+        <a href="/participation/" class="btn btn-primary" style="margin-right: 12px;">Записаться в тестеры</a>
+        <a href="/roadmap/" class="btn btn-secondary">Смотреть дорожную карту</a>
+      </section>
+
+    </div>
+  </main>
+
   <div class="page-wrapper">
     <div id="footer-container"></div>
   </div>
 
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <script src="/js/i18n.js" defer></script>
   <script src="/js/loadComponents.js" defer></script>
 </body>
 </html>
-

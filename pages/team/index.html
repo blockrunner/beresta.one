@@ -4,33 +4,429 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Команда | Beresta</title>
+  <meta name="description" content="Антон Березкин — основатель Береста. Инженер-кибернетик, AI Product Manager, создатель первого тактильного киберимпланта без скальпеля.">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/animations.css">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .team-hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .team-hero__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin-bottom: 16px;
+    }
+
+    .team-hero__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      margin: 0 0 16px;
+      line-height: 1.2;
+    }
+
+    .team-hero__sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* Founder card */
+    .founder-section {
+      padding: 40px 0 100px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .founder-card {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 60px;
+      align-items: start;
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(224, 176, 255, 0.12);
+      border-radius: 20px;
+      padding: 48px;
+    }
+
+    .founder-card__photo-wrap {
+      position: relative;
+    }
+
+    .founder-card__photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 16px;
+      display: block;
+      filter: grayscale(15%);
+    }
+
+    .founder-card__badge {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(224, 176, 255, 0.25);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary-color);
+      white-space: nowrap;
+    }
+
+    .founder-card__info {
+      padding-top: 8px;
+    }
+
+    .founder-card__name {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+
+    .founder-card__role {
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin: 0 0 24px;
+    }
+
+    .founder-card__bio {
+      color: rgba(255,255,255,0.75);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      margin: 0 0 32px;
+    }
+
+    .founder-card__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .founder-stat {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .founder-stat__value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .founder-stat__label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.3;
+    }
+
+    .founder-card__links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .founder-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+    }
+
+    .founder-link:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      transform: translateY(-1px);
+    }
+
+    .founder-link--primary {
+      background: var(--primary-color);
+      color: #000;
+      border-color: var(--primary-color);
+    }
+
+    .founder-link--primary:hover {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .founder-link svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Skills tags */
+    .founder-card__skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .skill-tag {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(224, 176, 255, 0.08);
+      border: 1px solid rgba(224, 176, 255, 0.2);
+      color: var(--primary-color);
+    }
+
+    /* Hiring section */
+    .hiring-section {
+      padding: 80px 0 120px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .hiring-section__header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .hiring-section__title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+
+    .hiring-section__sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .positions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .position-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.25s;
+    }
+
+    .position-card:hover {
+      border-color: rgba(224, 176, 255, 0.25);
+      background: rgba(224, 176, 255, 0.04);
+    }
+
+    .position-card__icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .position-card__title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    .position-card__desc {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .hiring-cta {
+      text-align: center;
+    }
+
+    .hiring-cta p {
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .founder-card {
+        grid-template-columns: 1fr;
+        padding: 28px;
+        gap: 32px;
+      }
+
+      .founder-card__photo-wrap {
+        max-width: 240px;
+        margin: 0 auto;
+      }
+
+      .founder-card__stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .founder-card__name {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .founder-card__stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Загружаемый хедер -->
   <div id="header-container"></div>
 
   <main class="main-content">
     <div class="page-wrapper">
-      <section class="applications-overview">
-        <h1 class="section-title" style="margin-top: 160px;">Страница в разработке</h1>
-        <h3 style="text-align: center;">
-          Работаем над страницей, она скоро будет готова
-        </h3>
+
+      <!-- Hero -->
+      <section class="team-hero">
+        <span class="team-hero__label">Команда / Team</span>
+        <h1 class="team-hero__title">Люди за Берестой</h1>
+        <p class="team-hero__sub">Береста — это живой проект. За устройством стоит реальный человек с инженерным образованием и пятью годами прототипирования.</p>
       </section>
 
-      <section class="application-grid">
-        
-        
+      <!-- Founder card -->
+      <section class="founder-section">
+        <div class="founder-card">
+          <div class="founder-card__photo-wrap">
+            <img
+              src="/img/team/anton-berezhkin.png"
+              alt="Антон Березкин — основатель Бересты"
+              class="founder-card__photo"
+            >
+            <span class="founder-card__badge">Основатель · Founder</span>
+          </div>
 
-        <div class="application-card">
-  <img src="/img/404.jpg" alt="404">
+          <div class="founder-card__info">
+            <h2 class="founder-card__name">Антон Березкин</h2>
+            <p class="founder-card__role">Founder &amp; AI Product Manager</p>
+
+            <p class="founder-card__bio">
+              Инженер-кибернетик (СПбГТИ, 2012). Пять лет разрабатываю Бересту — от первого прототипа на Arduino и матрице из 64 электродов до Береста 3.2 с 128 вибромоторами и web-интерфейсом управления. Создал 3 AI-продукта с нуля до монетизации. Управлял IT-командами 25+ человек.
+            </p>
+
+            <p class="founder-card__bio" style="margin-top:-16px;">
+              Верю, что новые чувства — следующий рубеж человеческого развития.
+            </p>
+
+            <div class="founder-card__stats">
+              <div class="founder-stat">
+                <span class="founder-stat__value">5+</span>
+                <span class="founder-stat__label">лет на проекте</span>
+              </div>
+              <div class="founder-stat">
+                <span class="founder-stat__value">3</span>
+                <span class="founder-stat__label">поколения прототипов</span>
+              </div>
+              <div class="founder-stat">
+                <span class="founder-stat__value">128</span>
+                <span class="founder-stat__label">вибромоторов в Береста 3.2</span>
+              </div>
+            </div>
+
+            <div class="founder-card__skills">
+              <span class="skill-tag">AI Product Management</span>
+              <span class="skill-tag">Hardware Prototyping</span>
+              <span class="skill-tag">Web Bluetooth API</span>
+              <span class="skill-tag">Python / JS</span>
+              <span class="skill-tag">Sensory Substitution</span>
+              <span class="skill-tag">Blockchain</span>
+            </div>
+
+            <div class="founder-card__links">
+              <a href="https://t.me/berestadotone" target="_blank" rel="noopener" class="founder-link founder-link--primary">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+                Написать в Telegram
+              </a>
+              <a href="mailto:contact@beresta.one" class="founder-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+                contact@beresta.one
+              </a>
+              <a href="/prototype/" class="founder-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 0 2 12a10 10 0 0 0 17.07 7.07"/><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83"/></svg>
+                Посмотреть прототип
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hiring section -->
+      <section class="hiring-section">
+        <div class="hiring-section__header">
+          <h2 class="hiring-section__title">Мы ищем в команду</h2>
+          <p class="hiring-section__sub">Береста строит платформу. Нам нужны люди, которые хотят создать новое чувство вместе с нами.</p>
         </div>
 
-          <!-- Загружаемый футер -->
+        <div class="positions-grid">
+          <div class="position-card">
+            <span class="position-card__icon">⚡</span>
+            <h3 class="position-card__title">Hardware Engineer</h3>
+            <p class="position-card__desc">Проектирование PCB, работа с вибромоторами, LRA-актуаторами. Опыт с Arduino / ESP32 / STM32.</p>
+          </div>
+          <div class="position-card">
+            <span class="position-card__icon">🧠</span>
+            <h3 class="position-card__title">ML / AI Engineer</h3>
+            <p class="position-card__desc">Разработка алгоритмов преобразования данных в тактильные паттерны. Python, TensorFlow / PyTorch.</p>
+          </div>
+          <div class="position-card">
+            <span class="position-card__icon">📱</span>
+            <h3 class="position-card__title">Mobile Developer</h3>
+            <p class="position-card__desc">Приложение на Web Bluetooth API для Android и кроссплатформенных систем. JS / React Native.</p>
+          </div>
+          <div class="position-card">
+            <span class="position-card__icon">🎨</span>
+            <h3 class="position-card__title">UX / Industrial Designer</h3>
+            <p class="position-card__desc">Форм-фактор Береста 4.0: ergonomics, wearable design, материалы, comfort. Figma + физические прототипы.</p>
+          </div>
+        </div>
+
+        <div class="hiring-cta">
+          <p>Нет подходящей позиции — напиши все равно. Мы открыты к любому ценному вкладу.</p>
+          <a href="/participation/" class="btn btn-primary" style="margin-right:12px;">Стать частью команды</a>
+          <a href="https://t.me/berestadotone" target="_blank" rel="noopener" class="btn btn-secondary">Написать напрямую</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
   <div class="page-wrapper">
     <div id="footer-container"></div>
   </div>
@@ -39,4 +435,3 @@
   <script src="/js/loadComponents.js" defer></script>
 </body>
 </html>
-

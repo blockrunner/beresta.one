@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как мы дошли до Бересты 3.2 | Beresta Blog</title>
+  <meta name="description" content="История разработки Бересты: от первого прототипа на Arduino до 128 вибромоторов. Пять лет, три поколения, один урок.">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="preload" href="/components/header.html" as="fetch">
+  <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .article-hero {
+      padding: 140px 0 60px;
+    }
+
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+
+    .article-back:hover {
+      color: var(--primary-color);
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .article-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 12px;
+      background: rgba(224, 176, 255, 0.1);
+      color: var(--primary-color);
+    }
+
+    .article-date {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .article-read-time {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .article-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 20px;
+    }
+
+    .article-lead {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.75;
+      margin-bottom: 48px;
+      max-width: 700px;
+      border-left: 3px solid var(--primary-color);
+      padding-left: 20px;
+    }
+
+    /* Content */
+    .article-content {
+      max-width: 740px;
+    }
+
+    .article-content h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 48px 0 16px;
+      color: #fff;
+    }
+
+    .article-content p {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.85;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .article-content strong {
+      color: #fff;
+    }
+
+    .article-content em {
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+
+    .article-highlight {
+      background: rgba(224, 176, 255, 0.06);
+      border: 1px solid rgba(224, 176, 255, 0.15);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 32px 0;
+    }
+
+    .article-highlight p {
+      margin: 0;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .article-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+    }
+
+    .article-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .article-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .article-table td:first-child {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Author */
+    .article-author {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 32px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      margin-top: 60px;
+    }
+
+    .article-author__photo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .article-author__name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .article-author__role {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Next post */
+    .article-nav {
+      padding: 60px 0 100px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    .article-nav p {
+      color: rgba(255,255,255,0.35);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <main class="main-content">
+    <div class="page-wrapper">
+      <article class="article-hero">
+
+        <a href="/blog/" class="article-back">← Все статьи</a>
+
+        <div class="article-meta">
+          <span class="article-tag">Founder Story</span>
+          <span class="article-date">Март 2025</span>
+          <span class="article-read-time">· 6 мин</span>
+        </div>
+
+        <h1 class="article-title">Как мы дошли до Бересты 3.2: пять лет, три прототипа, один урок</h1>
+
+        <p class="article-lead">
+          Первый прототип обжигал кожу. Второй разваливался. Третий заработал — но весит почти килограмм. Вот что произошло за пять лет разработки тактильного браслета нового поколения.
+        </p>
+
+        <div class="article-content">
+
+          <p>Когда я начинал в 2020 году, у меня было три вещи: диплом кибернетика, прочитанная лекция Дэвида Иглмана на TED и Arduino из интернет-магазина. И смутная уверенность в том, что тактильный интерфейс с нейропластичностью — это реально.</p>
+
+          <p>Сейчас у меня есть браслет с 128 вибромоторами, который передает информацию на кожу. Он тяжелый, громкий и не очень красивый. Но он работает. И это большая разница.</p>
+
+          <h2>Береста 1.0: когда ток — плохая идея</h2>
+
+          <p>Первый прототип был максимально прямолинейным: Arduino, промежуточная плата, дисплей и матрица из 64 медных электродов. Принцип — передавать сигнал через слабый электрический ток прямо на кожу.</p>
+
+          <p>В теории это работало. На практике — нет. После нескольких сессий тестирования стало очевидно: ток повреждает кожу, ее проводимость меняется непредсказуемо, и все, что ты чувствуешь через час тестирования — это жжение, а не паттерн.</p>
+
+          <div class="article-highlight">
+            <p>Вывод был простым и жестким: электростимуляция кожи постоянным током для длительного ношения не подходит. Нужен другой способ создавать тактильный сигнал.</p>
+          </div>
+
+          <p>Мы начали смотреть на вибромоторы. Технология не новая — в каждом смартфоне есть что-то подобное. Но применить ее в матрице на несколько сотен точек — совсем другая задача.</p>
+
+          <h2>Береста 2.0: вибрации работают, конструкция — нет</h2>
+
+          <p>Вторая версия отличалась от первой одним: электроды заменили на вибромоторы. Прошивка переписана под новый принцип. Результаты тестирования стали позитивными.</p>
+
+          <p>Мы увидели то, что искали: при регулярных сессиях распознавание паттернов улучшалось. Мозг адаптировался. Нейропластичность работала — не в теории, а у нас на руках.</p>
+
+          <p>Но сама конструкция была крайне ненадежной. Плохо держалась на руке. Моторы крепились ненадежно. Управление через примитивный интерфейс было неудобным. Для лабораторных условий — терпимо. Для внешних тестеров — совершенно нет.</p>
+
+          <h2>Береста 3.2: рабочий инструмент</h2>
+
+          <p>Третья версия — это уже настоящий инструмент. 128 вибромоторов на силиконовой подложке. 8 промежуточных плат. Программируемый микроконтроллер. Небольшой дисплей, который дублирует тактильный сигнал визуально — это помогает при обучении.</p>
+
+          <p>Веб-интерфейс управления через Web Bluetooth API: очередь сигналов, длительности, задержки, выбор руки. Подключается с любого устройства без установки приложений.</p>
+
+          <table class="article-table">
+            <thead>
+              <tr>
+                <th>Версия</th>
+                <th>Главное изменение</th>
+                <th>Результат</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1.0</td>
+                <td>64 электрода, постоянный ток</td>
+                <td>Повреждение кожи. Отказ.</td>
+              </tr>
+              <tr>
+                <td>2.0</td>
+                <td>Переход на вибромоторы</td>
+                <td>Паттерны распознаются. Конструкция слабая.</td>
+              </tr>
+              <tr>
+                <td>3.2</td>
+                <td>128 моторов, web-интерфейс</td>
+                <td>Рабочий лабораторный инструмент.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Один урок на пять лет</h2>
+
+          <p>Если коротко: <strong>итерировать нужно быстро, а тестировать — сразу на себе</strong>. Каждая версия Бересты тестировалась на мне в первую очередь. Это болезненно (в прямом смысле, в случае с Береста 1.0), но это единственный способ быстро понять, что не работает.</p>
+
+          <p>Сейчас мы в точке, где устройство работает технически, но еще не готово для реального мира. Вес — 704 грамма. Шум при контакте с поверхностью — 76 дБ. Для лаборатории приемлемо, для кафе или офиса — нет.</p>
+
+          <p>Береста 4.0 должна стать тем самым устройством, которое можно носить каждый день. Компактнее, тише, удобнее. Именно над этим мы работаем сейчас.</p>
+
+          <p>Если ты хочешь стать частью этого — посмотри страницу участия. Нам нужны тестеры, разработчики и просто люди, которые верят в то, что новые чувства — это реально.</p>
+
+          <!-- Author -->
+          <div class="article-author">
+            <img src="/img/team/anton-berezhkin.png" alt="Антон Березкин" class="article-author__photo">
+            <div>
+              <div class="article-author__name">Антон Березкин</div>
+              <div class="article-author__role">Основатель Бересты · AI Product Manager</div>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- Navigation -->
+      <div class="article-nav">
+        <p>Следующая статья</p>
+        <a href="/blog/posts/technology/" class="btn btn-secondary">Сенсорное замещение: наука за Берестой →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="page-wrapper">
+    <div id="footer-container"></div>
+  </div>
+
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/loadComponents.js" defer></script>
+</body>
+</html>

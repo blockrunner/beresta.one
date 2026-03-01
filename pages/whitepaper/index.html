@@ -3,34 +3,628 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Белая книга | Beresta</title>
+  <title>White Paper | Beresta</title>
+  <meta name="description" content="White Paper проекта Береста. Технология сенсорного замещения, AI, блокчейн, токеномика BERS и способы поддержки проекта.">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/animations.css">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
+  <style>
+    .wp-hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .wp-hero__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--secondary-color);
+      margin-bottom: 16px;
+    }
+
+    .wp-hero__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .wp-hero__sub {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    .wp-hero__meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      flex-wrap: wrap;
+    }
+
+    .wp-hero__meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* TOC */
+    .wp-toc {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin: 40px 0 80px;
+      max-width: 540px;
+    }
+
+    .wp-toc h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin: 0 0 16px;
+    }
+
+    .wp-toc ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .wp-toc li {
+      margin-bottom: 8px;
+    }
+
+    .wp-toc a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .wp-toc a:hover {
+      color: var(--primary-color);
+    }
+
+    /* Content sections */
+    .wp-section {
+      padding: 60px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .wp-section h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+
+    .wp-section p {
+      color: rgba(255,255,255,0.65);
+      line-height: 1.8;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    .wp-section strong {
+      color: #fff;
+    }
+
+    /* Problem-solution table */
+    .problem-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+    }
+
+    .problem-table th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .problem-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: top;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .problem-table td:first-child {
+      width: 40px;
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .problem-table td:nth-child(2) {
+      color: rgba(255,255,255,0.55);
+    }
+
+    .problem-table td:nth-child(3) {
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+    }
+
+    /* Tokenomics */
+    .tokenomics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+      margin-top: 32px;
+    }
+
+    .token-chart {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .token-chart h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .token-slice {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .token-slice__bar {
+      height: 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .token-slice__label {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      flex: 1;
+    }
+
+    .token-slice__pct {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .token-info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .token-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .token-item__label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
+
+    .token-item__value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .token-item__desc {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* Invest section */
+    .invest-section {
+      padding: 80px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .invest-section__header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .invest-section__header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .invest-section__header p {
+      color: rgba(255,255,255,0.45);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .invest-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .invest-method {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+
+    .invest-method:hover {
+      border-color: rgba(224, 176, 255, 0.25);
+      background: rgba(224, 176, 255, 0.04);
+    }
+
+    .invest-method__icon {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .invest-method__name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .invest-method__desc {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .invest-method__note {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
+    .invest-cta {
+      text-align: center;
+    }
+
+    .invest-cta p {
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 20px;
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      margin-top: 40px;
+      padding: 24px;
+      background: rgba(255, 200, 0, 0.05);
+      border: 1px solid rgba(255, 200, 0, 0.15);
+      border-radius: 12px;
+    }
+
+    .disclaimer__title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 200, 0, 0.7);
+      margin-bottom: 8px;
+    }
+
+    .disclaimer p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* Applications grid */
+    .use-cases {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .use-case {
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .use-case strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .tokenomics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .invest-methods {
+        grid-template-columns: 1fr;
+      }
+
+      .use-cases {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .use-cases {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-table {
+        font-size: 0.82rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Загружаемый хедер -->
   <div id="header-container"></div>
 
   <main class="main-content">
     <div class="page-wrapper">
-      <section class="applications-overview">
-        <h1 class="section-title" style="margin-top: 160px;">Страница в разработке</h1>
-        <h3 style="text-align: center;">
-          Работаем над страницей, она скоро будет готова
-        </h3>
+
+      <!-- Hero -->
+      <section class="wp-hero">
+        <span class="wp-hero__label">White Paper</span>
+        <h1 class="wp-hero__title">Береста — платформа нового чувства</h1>
+        <p class="wp-hero__sub">
+          Подробный технический и бизнес-документ проекта: технология, прототип, AI, блокчейн, токеномика и план развития.
+        </p>
+        <div class="wp-hero__meta">
+          <span>📅 Версия: март 2025</span>
+          <span>📄 Executive Summary</span>
+          <span>🌐 RU / EN (в разработке)</span>
+        </div>
       </section>
 
-      <section class="application-grid">
-        
-        
+      <!-- TOC -->
+      <div class="wp-toc">
+        <h3>Содержание</h3>
+        <ol>
+          <li><a href="#about">Что такое Береста</a></li>
+          <li><a href="#problems">Проблемы и решения</a></li>
+          <li><a href="#tech">Технология</a></li>
+          <li><a href="#applications">Применение</a></li>
+          <li><a href="#tokenomics">Токеномика BERS</a></li>
+          <li><a href="#invest">Поддержать проект</a></li>
+        </ol>
+      </div>
 
-        <div class="application-card">
-  <img src="/img/404.jpg" alt="404">
+      <!-- 1. About -->
+      <section class="wp-section" id="about">
+        <h2>1. Что такое Береста</h2>
+        <p>
+          <strong>Береста</strong> — автономный нарукавник с интерфейсом тактильной обратной связи. Устройство передает информацию пользователю через тактильные стимуляторы, существенно расширяя осязание — до уровня, приближенного к зрительному восприятию.
+        </p>
+        <p>
+          Браслет забирает из источника изображение, текст, данные датчиков или любую другую информацию — и передает ее на кожу пользователя в формате вибрационных паттернов. Благодаря нейропластичности мозг после периода обучения начинает считывать и обрабатывать эту информацию с высокой точностью.
+        </p>
+        <p>
+          Береста — это не просто устройство. Это <strong>платформа</strong>: модульная архитектура и открытый API позволяют адаптировать браслет под практически неограниченное число сценариев использования.
+        </p>
+      </section>
+
+      <!-- 2. Problems -->
+      <section class="wp-section" id="problems">
+        <h2>2. Проблемы устройств сенсорного замещения и решения Бересты</h2>
+        <p>Рынок устройств сенсорного замещения существует, но имеет системные барьеры для массового принятия:</p>
+
+        <div style="overflow-x:auto;">
+          <table class="problem-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Проблема</th>
+                <th>Решение Бересты</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Узкая направленность: устройства решают одну задачу</td>
+                <td><strong>Открытый API.</strong> Любой сценарий через API и SDK.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Обучение занимает месяцы или годы</td>
+                <td><strong>AI-оптимизация.</strong> Алгоритм адаптирует паттерны под каждого пользователя.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Эксперименты только в лабораторных условиях</td>
+                <td><strong>Блокчейн-сеть.</strong> Глобальная распределенная сеть тестеров со стимулами.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. Technology -->
+      <section class="wp-section" id="tech">
+        <h2>3. Технология</h2>
+        <p>
+          Береста использует три взаимодополняющих технологии:
+        </p>
+        <p>
+          <strong>Нейропластичность.</strong> Мозг способен перестраиваться под новые сенсорные входы. Это доказано десятилетиями исследований — от Bach-y-Rita (1969) до Neosensory. Береста создает новый канал для этого.
+        </p>
+        <p>
+          <strong>AI-преобразование данных.</strong> AI-модель переводит данные любого типа — изображения, звук, геопозицию, уведомления — в оптимальные вибрационные паттерны. Модель обучается на результатах тестирования и с каждым тестером становится точнее.
+        </p>
+        <p>
+          <strong>Блокчейн-верификация.</strong> Результаты каждой тестовой сессии записываются в блокчейн, обеспечивая прозрачность, неизменность и справедливое вознаграждение участников.
+        </p>
+        <a href="/technology/" class="btn btn-secondary" style="margin-top:12px;">Подробнее о технологии</a>
+      </section>
+
+      <!-- 4. Applications -->
+      <section class="wp-section" id="applications">
+        <h2>4. Применение</h2>
+        <p>Береста охватывает 16 подтвержденных сценариев использования:</p>
+
+        <div class="use-cases">
+          <div class="use-case"><strong>Навигация</strong>Направление и расстояние через тактильный сигнал</div>
+          <div class="use-case"><strong>Уведомления</strong>Умная фильтрация по приоритету источника</div>
+          <div class="use-case"><strong>Спорт</strong>Тренерские подсказки и мониторинг команды</div>
+          <div class="use-case"><strong>Медицина</strong>Мониторинг жизненных показателей</div>
+          <div class="use-case"><strong>Поисково-спасательные работы</strong>Коммуникация в сложных условиях</div>
+          <div class="use-case"><strong>Музыка</strong>Тактильный опыт прослушивания</div>
+          <div class="use-case"><strong>VR / Игры</strong>Расширенная тактильная обратная связь</div>
+          <div class="use-case"><strong>Финтех / трейдинг</strong>Сигналы рынка через вибрацию</div>
+          <div class="use-case"><strong>Образование</strong>Дублирующая трансляция учебного материала</div>
+        </div>
+        <a href="/applications/" class="btn btn-secondary" style="margin-top:20px;">Все применения</a>
+      </section>
+
+      <!-- 5. Tokenomics -->
+      <section class="wp-section" id="tokenomics">
+        <h2>5. Токеномика BERS</h2>
+        <p>
+          Токен <strong>BERS</strong> — utility-токен экосистемы Бересты. Он не является инвестиционным инструментом. Его назначение: стимулирование тестирования, управление платформой и доступ к продуктам экосистемы.
+        </p>
+
+        <div class="tokenomics-grid">
+          <div class="token-chart">
+            <h3>Распределение токенов</h3>
+
+            <div class="token-slice">
+              <div class="token-slice__bar" style="width:80px;background:#00ffaa;"></div>
+              <span class="token-slice__label">Тестеры и сообщество</span>
+              <span class="token-slice__pct">40%</span>
+            </div>
+            <div class="token-slice">
+              <div class="token-slice__bar" style="width:60px;background:#e0b0ff;"></div>
+              <span class="token-slice__label">Продажа (ICO/STO)</span>
+              <span class="token-slice__pct">30%</span>
+            </div>
+            <div class="token-slice">
+              <div class="token-slice__bar" style="width:40px;background:#64c8ff;"></div>
+              <span class="token-slice__label">Команда и разработка</span>
+              <span class="token-slice__pct">20%</span>
+            </div>
+            <div class="token-slice">
+              <div class="token-slice__bar" style="width:20px;background:rgba(255,255,255,0.3);"></div>
+              <span class="token-slice__label">Резерв</span>
+              <span class="token-slice__pct">10%</span>
+            </div>
+          </div>
+
+          <div class="token-info">
+            <div class="token-item">
+              <div class="token-item__label">Название токена</div>
+              <div class="token-item__value">BERS</div>
+            </div>
+            <div class="token-item">
+              <div class="token-item__label">Тип</div>
+              <div class="token-item__value">Utility Token</div>
+              <div class="token-item__desc">Не является ценной бумагой или инвестиционным инструментом</div>
+            </div>
+            <div class="token-item">
+              <div class="token-item__label">Применение BERS</div>
+              <div class="token-item__value">3 основных сценария</div>
+              <div class="token-item__desc">
+                Оплата тестовых транзакций · Доступ к kit для сборки устройства · Голосование за roadmap
+              </div>
+            </div>
+            <div class="token-item">
+              <div class="token-item__label">Статус</div>
+              <div class="token-item__value">Pre-sale / Подготовка</div>
+              <div class="token-item__desc">Блокчейн-инфраструктура в разработке параллельно с Береста 4.0</div>
+            </div>
+          </div>
         </div>
 
-          <!-- Загружаемый футер -->
+        <h3 style="margin-top:40px;font-size:1.1rem;font-weight:700;">Что получает держатель BERS</h3>
+        <p>
+          <strong>Тестер:</strong> за каждую зарегистрированную сессию тестирования — вознаграждение в BERS.<br>
+          <strong>Инвестор / холдер:</strong> доступ к kit для сборки Береста 4.0, участие в голосовании за приоритеты разработки.<br>
+          <strong>Контрибьютор:</strong> вознаграждение за код, идеи, привлечение новых участников.<br>
+          <strong>Все:</strong> участие в управлении платформой через DAO-механизм.
+        </p>
+      </section>
+
+      <!-- 6. Invest -->
+      <section class="invest-section" id="invest">
+        <div class="invest-section__header">
+          <h2>6. Поддержать проект</h2>
+          <p>Инвестиции направляются на разработку Береста 4.0, расширение команды и запуск глобальной тестовой сети. Принимаем несколько форматов.</p>
+        </div>
+
+        <div class="invest-methods">
+          <div class="invest-method">
+            <span class="invest-method__icon">₮</span>
+            <div class="invest-method__name">USDT / USDC</div>
+            <div class="invest-method__desc">Стейблкоин. Доступно из РФ через TON, TRC-20, ERC-20 сети.</div>
+            <span class="invest-method__note">Рекомендуется</span>
+          </div>
+          <div class="invest-method">
+            <span class="invest-method__icon">₿</span>
+            <div class="invest-method__name">Bitcoin</div>
+            <div class="invest-method__desc">Самый международный способ. Без посредников, без границ.</div>
+            <span class="invest-method__note">Международный</span>
+          </div>
+          <div class="invest-method">
+            <span class="invest-method__icon">✉️</span>
+            <div class="invest-method__name">Написать напрямую</div>
+            <div class="invest-method__desc">Для стратегических инвесторов и грантовых программ — обсудим формат индивидуально.</div>
+            <span class="invest-method__note">Для крупных сумм</span>
+          </div>
+        </div>
+
+        <div class="invest-cta">
+          <p>Для получения реквизитов и обсуждения условий — напиши напрямую основателю.</p>
+          <a href="https://t.me/berestadotone" target="_blank" rel="noopener" class="btn btn-primary" style="margin-right:12px;">Написать в Telegram</a>
+          <a href="mailto:contact@beresta.one" class="btn btn-secondary">contact@beresta.one</a>
+        </div>
+
+        <div class="disclaimer">
+          <div class="disclaimer__title">Важное примечание</div>
+          <p>
+            Токен BERS является utility-токеном и не является инвестиционным инструментом, ценной бумагой или обязательством получения дохода. Участие в проекте сопряжено с рисками, характерными для ранней стадии разработки. Все финансовые решения — на ваше усмотрение. Мы предоставляем максимальную прозрачность: история прототипов, открытая команда, обновляемый roadmap.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
   <div class="page-wrapper">
     <div id="footer-container"></div>
   </div>
@@ -39,4 +633,3 @@
   <script src="/js/loadComponents.js" defer></script>
 </body>
 </html>
-
