@@ -5,7 +5,8 @@ let translations = {
     "nav.prototype": "Prototype",
     "nav.app": "App",
     "nav.team": "Team",
-    "nav.participation": "Participation"
+    "nav.participation": "Participation",
+    "nav.designGuide": "Design Guide"
   },
   ru: {
     "nav.technology": "Технология",
@@ -13,7 +14,8 @@ let translations = {
     "nav.prototype": "Прототип", 
     "nav.app": "App",
     "nav.team": "Команда",
-    "nav.participation": "Участие"
+    "nav.participation": "Участие",
+    "nav.designGuide": "Дизайн-гайд"
   }
 };
 
@@ -44,10 +46,25 @@ function loadLanguage(lang) {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (translations[lang] && translations[lang][key]) {
-      el.textContent = translations[lang][key];
-    } else {
-      el.textContent = key;
+    const translated = getTranslation(lang, key);
+    if (translated) {
+      el.textContent = translated;
     }
   });
+}
+
+function getTranslation(lang, key) {
+  const langDict = translations[lang];
+  if (!langDict) return null;
+
+  // Backward compatibility for flat keys like "nav.technology"
+  if (langDict[key]) return langDict[key];
+
+  // Support nested JSON structure: { nav: { technology: "..." } }
+  return key.split('.').reduce((acc, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return acc[part];
+    }
+    return null;
+  }, langDict);
 }

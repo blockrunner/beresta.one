@@ -5,7 +5,8 @@
     "prototype": "Prototype",
     "app": "App",
     "team": "Team",
-    "participation": "Participation"
+    "participation": "Participation",
+    "designGuide": "Design Guide"
   },
   "footer": {
     "about": "About Project",
