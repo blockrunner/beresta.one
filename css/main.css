@@ -368,12 +368,20 @@ body {
   box-sizing: border-box;
 }
 
+.hero-media {
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(209, 217, 221, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0;
+}
+
 .hero-media model-viewer {
   width: 100%;
   height: auto;
   display: block;
   max-width: 100%;
-  border-radius: 10px;
+  border-radius: 0;
   background: transparent;
 }
 
