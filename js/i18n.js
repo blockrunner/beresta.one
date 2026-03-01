@@ -29,12 +29,12 @@ async function loadTranslations() {
     
     if (ruResponse.ok) {
       const ruData = await ruResponse.json();
-      translations.ru = { ...translations.ru, ...ruData };
+      translations.ru = { ...translations.ru, ...flattenTranslations(ruData) };
     }
     
     if (enResponse.ok) {
       const enData = await enResponse.json();
-      translations.en = { ...translations.en, ...enData };
+      translations.en = { ...translations.en, ...flattenTranslations(enData) };
     }
   } catch (error) {
     console.error('Error loading translations:', error);
@@ -55,16 +55,22 @@ function loadLanguage(lang) {
 
 function getTranslation(lang, key) {
   const langDict = translations[lang];
-  if (!langDict) return null;
+  if (!langDict || !key) return null;
+  return langDict[key] || null;
+}
 
-  // Backward compatibility for flat keys like "nav.technology"
-  if (langDict[key]) return langDict[key];
+function flattenTranslations(obj, prefix = '') {
+  const flat = {};
 
-  // Support nested JSON structure: { nav: { technology: "..." } }
-  return key.split('.').reduce((acc, part) => {
-    if (acc && typeof acc === 'object' && part in acc) {
-      return acc[part];
+  Object.entries(obj || {}).forEach(([k, v]) => {
+    const key = prefix ? `${prefix}.${k}` : k;
+
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      Object.assign(flat, flattenTranslations(v, key));
+    } else {
+      flat[key] = v;
     }
-    return null;
-  }, langDict);
+  });
+
+  return flat;
 }
