@@ -11,6 +11,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)/?$ pages/$1/index.html [L]
 
 # Редирект с .html
+RewriteCond %{REQUEST_URI} !^/components/ [NC]
 RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
 RewriteRule ^ /%1? [NC,L,R=301]
 
