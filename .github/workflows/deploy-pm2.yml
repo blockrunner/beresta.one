@@ -1,4 +1,4 @@
-name: Deploy to Production (PM2)
+name: Deploy to Production
 
 on:
   push:
@@ -8,47 +8,46 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Check deploy secrets
       env:
-        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_USER: ${{ secrets.SSH_USER }}
         SSH_HOST: ${{ secrets.SSH_HOST }}
-        REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PASS: ${{ secrets.SSH_PASS }}
+        SSH_REMOTE_PATH: ${{ secrets.SSH_REMOTE_PATH }}
       run: |
         missing=""
-        [ -z "$SSH_KEY" ] && missing="$missing SSH_PRIVATE_KEY"
-        [ -z "$SSH_USER" ] && missing="$missing SSH_USER"
         [ -z "$SSH_HOST" ] && missing="$missing SSH_HOST"
-        [ -z "$REMOTE_PATH" ] && missing="$missing REMOTE_PATH"
+        [ -z "$SSH_USER" ] && missing="$missing SSH_USER"
+        [ -z "$SSH_PASS" ] && missing="$missing SSH_PASS"
+        [ -z "$SSH_REMOTE_PATH" ] && missing="$missing SSH_REMOTE_PATH"
         if [ -n "$missing" ]; then
           echo "::error::Missing or empty GitHub Actions secrets:$missing"
-          echo "Add them in: Repository → Settings → Secrets and variables → Actions"
-          echo "If deploys worked before: re-add SSH_PRIVATE_KEY (full key with BEGIN/END lines). Workflows from forks or some PRs do not receive secrets."
+          echo "Add them in: Repository -> Settings -> Secrets and variables -> Actions"
           exit 1
         fi
         echo "Required secrets are set."
-      
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
-        cache: 'npm'
-        
+        node-version: "18"
+        cache: "npm"
+
     - name: Install dependencies
       run: |
         npm ci
         cd app/api && npm ci
-        
+
     - name: Build application
       run: |
         npm run build:site
         npm run install:prod
-        
+
     - name: Create deployment package
       run: |
         mkdir -p deploy-package
@@ -66,87 +65,73 @@ jobs:
         cp server.js deploy-package/
         cp ecosystem.config.js deploy-package/
         cp .env.example deploy-package/.env
-        
-        # Create logs directory
-        mkdir -p deploy-package/logs
-        
-        # Use .htaccess from repo (clean URLs, /app/ rule, cache)
         cp .htaccess deploy-package/.htaccess
-        
-        # Create PM2 startup script
-        cat > deploy-package/start.sh << 'EOF'
+        mkdir -p deploy-package/logs
+
+        cat > deploy-package/start.sh << "EOF"
         #!/bin/bash
+        set -e
         cd "$(dirname "$0")"
-        
-        # Install PM2 globally if not installed
-        if ! command -v pm2 &> /dev/null; then
-            npm install -g pm2
+
+        if ! command -v pm2 >/dev/null 2>&1; then
+          npm install -g pm2
         fi
-        
-        # Stop existing application
+
         pm2 stop beresta-website 2>/dev/null || true
         pm2 delete beresta-website 2>/dev/null || true
-        
-        # Start application with PM2
         pm2 start ecosystem.config.js --env production
-        
-        # Save PM2 configuration
         pm2 save
-        
-        # Setup PM2 startup (if not already done)
         pm2 startup 2>/dev/null || true
-        
-        echo "Application started with PM2"
         EOF
-        
+
         chmod +x deploy-package/start.sh
-        
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.8.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        
+
+    - name: Install deploy tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sshpass rsync
+
     - name: Deploy to server
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PASS: ${{ secrets.SSH_PASS }}
+        SSH_REMOTE_PATH: ${{ secrets.SSH_REMOTE_PATH }}
       run: |
-        # Create backup
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cp -r ${{ secrets.REMOTE_PATH }} ${{ secrets.REMOTE_PATH }}.backup.$(date +%Y%m%d_%H%M%S) 2>/dev/null || true"
-        
-        # Upload files
-        rsync -avz --delete deploy-package/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_PATH }}/
-        
-        # Install dependencies on server
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && npm install --production"
-        
-        # Set up environment
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && cp .env.example .env"
-        
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+          "mkdir -p '$SSH_REMOTE_PATH' && cp -r '$SSH_REMOTE_PATH' '${SSH_REMOTE_PATH}.backup.$(date +%Y%m%d_%H%M%S)' 2>/dev/null || true"
+
+        sshpass -p "$SSH_PASS" rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          deploy-package/ "$SSH_USER@$SSH_HOST:$SSH_REMOTE_PATH/"
+
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+          "cd '$SSH_REMOTE_PATH' && npm install --production && cp .env.example .env"
+
     - name: Restart application with PM2
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PASS: ${{ secrets.SSH_PASS }}
+        SSH_REMOTE_PATH: ${{ secrets.SSH_REMOTE_PATH }}
       run: |
-        # Run the startup script
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && ./start.sh"
-        
-        # Wait for application to start
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+          "cd '$SSH_REMOTE_PATH' && ./start.sh"
         sleep 10
-        
-        # Check if application is running
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pm2 status beresta-website"
-        
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+          "pm2 status beresta-website || pm2 status"
+
     - name: Health check
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
       run: |
-        # Wait for application to be ready
-        sleep 15
-        SITE_URL="${{ secrets.SITE_URL }}"
-        if [ -z "$SITE_URL" ]; then SITE_URL="https://beresta.one"; fi
+        sleep 10
+        SITE_URL="https://$SSH_HOST"
         echo "Checking $SITE_URL ..."
         curl -f --retry 2 --connect-timeout 15 --max-time 30 "$SITE_URL/" || exit 1
         curl -f --retry 2 --connect-timeout 15 --max-time 30 "$SITE_URL/applications/" || exit 1
-        echo "✅ Health check passed - application is running"
-        
-    - name: Show PM2 status
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pm2 status"
-        
+        echo "Health check passed."
+
     - name: Cleanup
       if: always()
-      run: |
-        rm -rf deploy-package
+      run: rm -rf deploy-package
