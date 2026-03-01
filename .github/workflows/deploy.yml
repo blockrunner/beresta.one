@@ -51,6 +51,8 @@ jobs:
     - name: Create deployment package
       run: |
         mkdir -p deploy-package
+        cp index.html deploy-package/
+        cp 404.html deploy-package/
         cp -r dist deploy-package/
         cp -r app deploy-package/
         cp -r img deploy-package/
