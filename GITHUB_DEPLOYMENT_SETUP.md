@@ -116,6 +116,18 @@ pm2 restart beresta-website
 
 ## Troubleshooting
 
+### «The ssh-private-key argument is empty» / «Missing or empty GitHub Actions secrets»
+Деплой раньше работал, но теперь падает с пустым ключом — типичные причины:
+
+1. **Секрет удалён или переименован**  
+   Зайдите в репозиторий: **Settings → Secrets and variables → Actions**. Должны быть секреты: `SSH_PRIVATE_KEY`, `SSH_USER`, `SSH_HOST`, `REMOTE_PATH`. Если `SSH_PRIVATE_KEY` нет — создайте заново и вставьте **весь** приватный ключ (включая строки `-----BEGIN OPENSSH PRIVATE KEY-----` и `-----END OPENSSH PRIVATE KEY-----`), без лишних пробелов в начале/конце.
+
+2. **Запуск из форка или PR из форка**  
+   В таких запусках GitHub **не передаёт** секреты репозитория (политика безопасности). Запускайте workflow из ветки `main` основного репозитория (push в `main` или **Actions → Run workflow** с веткой `main`).
+
+3. **Перенос или пересоздание репозитория**  
+   Секреты при переносе не копируются — их нужно заново добавить в **Settings → Secrets and variables → Actions**.
+
 ### Ошибка SSH подключения:
 1. Проверьте правильность SSH ключей
 2. Убедитесь, что сервер доступен

@@ -11,6 +11,26 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Check deploy secrets
+      env:
+        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+      run: |
+        missing=""
+        [ -z "$SSH_KEY" ] && missing="$missing SSH_PRIVATE_KEY"
+        [ -z "$SSH_USER" ] && missing="$missing SSH_USER"
+        [ -z "$SSH_HOST" ] && missing="$missing SSH_HOST"
+        [ -z "$REMOTE_PATH" ] && missing="$missing REMOTE_PATH"
+        if [ -n "$missing" ]; then
+          echo "::error::Missing or empty GitHub Actions secrets:$missing"
+          echo "Add them in: Repository → Settings → Secrets and variables → Actions"
+          echo "If deploys worked before: re-add SSH_PRIVATE_KEY (full key with BEGIN/END lines). Workflows from forks or some PRs do not receive secrets."
+          exit 1
+        fi
+        echo "Required secrets are set."
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
