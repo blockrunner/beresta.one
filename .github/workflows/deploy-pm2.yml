@@ -101,7 +101,13 @@ jobs:
         sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
           "mkdir -p '$SSH_REMOTE_PATH' && cp -r '$SSH_REMOTE_PATH' '${SSH_REMOTE_PATH}.backup.$(date +%Y%m%d_%H%M%S)' 2>/dev/null || true"
 
-        sshpass -p "$SSH_PASS" rsync -avz --delete \
+        # Shared hosting often forbids changing owner/perms/timestamps.
+        # Keep delete for sync accuracy, but protect host-managed folders.
+        sshpass -p "$SSH_PASS" rsync -rlvz --delete --omit-dir-times \
+          --no-perms --no-owner --no-group \
+          --exclude ".well-known/" \
+          --exclude "ssl/" \
+          --exclude ".cache/" \
           -e "ssh -o StrictHostKeyChecking=no" \
           deploy-package/ "$SSH_USER@$SSH_HOST:$SSH_REMOTE_PATH/"
 
