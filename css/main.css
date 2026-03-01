@@ -821,3 +821,87 @@ body {
     height: 35px;
   }
 }
+
+/* ==========================================
+   Страница /applications/ — сетка сценариев
+   ========================================== */
+.applications-overview .section-description {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  padding: 0 20px;
+}
+
+.application-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+  margin-bottom: 80px;
+  padding: 0 20px;
+}
+
+.application-grid .application-card {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+/* Текст не прилипает к границам: паддинг у контента без .application-card-content */
+.application-grid .application-card > h3,
+.application-grid .application-card > p,
+.application-grid .application-card > ul {
+  padding-left: 24px;
+  padding-right: 24px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.application-grid .application-card > h3 {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+.application-grid .application-card > p {
+  padding-top: 0;
+  padding-bottom: 12px;
+  margin: 0;
+  color: #bbb;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.application-grid .application-card > p + ul,
+.application-grid .application-card > ul {
+  padding-left: 40px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+  margin: 0 0 0 0;
+  color: #888;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.application-grid .application-card > p + ul {
+  padding-top: 0;
+}
+
+/* Фото помещается целиком, без обрезки */
+.application-grid .application-card img {
+  width: 100%;
+  height: auto;
+  min-height: 280px;
+  max-height: 380px;
+  object-fit: contain;
+  object-position: center;
+  background: rgba(10, 10, 10, 0.6);
+  border-radius: 12px 12px 0 0;
+}
+
+@media (min-width: 769px) {
+  .application-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
