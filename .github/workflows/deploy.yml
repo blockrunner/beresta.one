@@ -4,9 +4,34 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Deployment or read-only hosting inspection
+        type: choice
+        default: deploy
+        options:
+          - deploy
+          - inspect
 
 jobs:
+  inspect:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'inspect'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Inspect hosting capabilities
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PASS: ${{ secrets.SSH_PASS }}
+        SSH_REMOTE_PATH: ${{ secrets.SSH_REMOTE_PATH }}
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y sshpass
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+          "cd '$SSH_REMOTE_PATH' && printf 'HOSTING_INSPECTION\\n' && pwd && (command -v node || true) && (node --version || true) && (command -v php || true) && (php --version | head -1 || true) && (command -v pm2 || true) && (command -v passenger-config || true) && if [ -f .env ]; then printf 'ENV_EXISTS\\n'; fi && ls -d app/api 2>/dev/null"
+
   deploy:
+    if: github.event_name != 'workflow_dispatch' || inputs.mode != 'inspect'
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +60,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: "18"
+        node-version: "22"
         cache: "npm"
 
     - name: Install dependencies
@@ -46,6 +71,7 @@ jobs:
     - name: Build application
       run: |
         npm run build:site
+        npm test
         npm run install:prod
 
     - name: Create deployment package
@@ -62,7 +88,7 @@ jobs:
         cp -r components deploy-package/
         cp -r locales deploy-package/
         cp -r pages deploy-package/
-        cp .env.example deploy-package/.env
+        cp .env.example deploy-package/.env.example
         cp .htaccess deploy-package/.htaccess
 
     - name: Install deploy tools
@@ -87,6 +113,8 @@ jobs:
           --exclude ".well-known/" \
           --exclude "ssl/" \
           --exclude ".cache/" \
+          --exclude ".env" \
+          --exclude "app/api/data/" \
           -e "ssh -o StrictHostKeyChecking=no" \
           deploy-package/ "$SSH_USER@$SSH_HOST:$SSH_REMOTE_PATH/"
 
@@ -98,24 +126,7 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
       run: |
         sleep 10
-        HTTPS_URL="https://$SSH_HOST"
-        HTTP_URL="http://$SSH_HOST"
-        echo "Checking $HTTPS_URL (fallback $HTTP_URL) ..."
-
-        if curl -f --retry 2 --connect-timeout 10 --max-time 20 "$HTTPS_URL/" \
-          && curl -f --retry 2 --connect-timeout 10 --max-time 20 "$HTTPS_URL/applications/"; then
-          echo "Health check passed via HTTPS."
-          exit 0
-        fi
-
-        if curl -f --retry 2 --connect-timeout 10 --max-time 20 "$HTTP_URL/" \
-          && curl -f --retry 2 --connect-timeout 10 --max-time 20 "$HTTP_URL/applications/"; then
-          echo "Health check passed via HTTP."
-          exit 0
-        fi
-
-        echo "::warning::Health check failed for both HTTPS and HTTP. Deployment files were uploaded, but endpoint check did not pass."
-        exit 0
+        node scripts/check-site.cjs "https://$SSH_HOST"
 
     - name: Cleanup
       if: always()
