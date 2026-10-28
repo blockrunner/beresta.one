@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /api/
+Disallow: /debug/
+Disallow: /test/
+Disallow: /test-and-debug/
+Disallow: /design-guide/
+Sitemap: https://beresta.one/sitemap.xml

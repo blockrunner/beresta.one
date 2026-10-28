@@ -4,10 +4,11 @@ const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 const queueRoutes = require('./routes/queue');
 const logsRoutes = require('./routes/logs');
+const { createParticipationRouter } = require('./routes/participation');
 
 const app = express();
 const PORT = process.env.API_PORT || 3000;
@@ -38,6 +39,7 @@ app.use('/api/', limiter);
 // Routes
 app.use('/api/queue', queueRoutes);
 app.use('/api/logs', logsRoutes);
+app.use('/api/participation', createParticipationRouter());
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -66,20 +68,16 @@ app.use('/api/*', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+if (require.main === module) {
+  const server = app.listen(PORT, () => {
   console.log(`🚀 Beresta API Server running on port ${PORT}`);
   console.log(`📍 Health check: http://localhost:${PORT}/api/health`);
   console.log(`⏹️  Press Ctrl+C to stop the server`);
-});
+  });
+  for (const signal of ['SIGINT', 'SIGTERM']) {
+    process.on(signal, () => server.close(() => process.exit(0)));
+  }
+}
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-  console.log('\n👋 Shutting down API server...');
-  process.exit(0);
-});
-
-process.on('SIGTERM', () => {
-  console.log('\n👋 Shutting down API server...');
-  process.exit(0);
-});
+module.exports = app;
 

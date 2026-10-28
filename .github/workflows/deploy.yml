@@ -74,6 +74,9 @@ jobs:
         npm test
         npm run install:prod
 
+    - name: Validate hosting PHP handler
+      run: php -l api/participation.php
+
     - name: Create deployment package
       run: |
         mkdir -p deploy-package
@@ -88,6 +91,8 @@ jobs:
         cp -r components deploy-package/
         cp -r locales deploy-package/
         cp -r pages deploy-package/
+        cp -r api deploy-package/
+        cp robots.txt sitemap.xml deploy-package/
         cp .env.example deploy-package/.env.example
         cp .htaccess deploy-package/.htaccess
 
@@ -102,7 +107,15 @@ jobs:
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_PASS: ${{ secrets.SSH_PASS }}
         SSH_REMOTE_PATH: ${{ secrets.SSH_REMOTE_PATH }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_LEAD_CHAT_ID: ${{ secrets.TELEGRAM_LEAD_CHAT_ID }}
       run: |
+        test -n "$TELEGRAM_BOT_TOKEN" && test -n "$TELEGRAM_LEAD_CHAT_ID"
+        umask 077
+        printf 'TELEGRAM_BOT_TOKEN=%s\nTELEGRAM_LEAD_CHAT_ID=%s\n' "$TELEGRAM_BOT_TOKEN" "$TELEGRAM_LEAD_CHAT_ID" > "$RUNNER_TEMP/beresta-telegram.env"
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+          "cd '$SSH_REMOTE_PATH' && umask 077 && mkdir -p ../.beresta-private && cat > ../.beresta-private/telegram.env && chmod 600 ../.beresta-private/telegram.env" < "$RUNNER_TEMP/beresta-telegram.env"
+
         sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
           "mkdir -p '$SSH_REMOTE_PATH' && cp -r '$SSH_REMOTE_PATH' '${SSH_REMOTE_PATH}.backup.$(date +%Y%m%d_%H%M%S)' 2>/dev/null || true"
 
@@ -122,11 +135,9 @@ jobs:
           "cd '$SSH_REMOTE_PATH' && cp -n .env.example .env || true"
 
     - name: Health check
-      env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
       run: |
         sleep 10
-        node scripts/check-site.cjs "https://$SSH_HOST"
+        node scripts/check-site.cjs https://beresta.one
 
     - name: Cleanup
       if: always()

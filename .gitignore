@@ -86,4 +86,5 @@ tmp/
 temp/
 
 # Test and debug folders
-test-and-debug/
+test-and-debug/*
+!test-and-debug/website.test.cjs

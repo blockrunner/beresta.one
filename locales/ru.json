@@ -6,7 +6,8 @@
     "app": "App",
     "team": "Команда",
     "participation": "Участие",
-    "designGuide": "Дизайн-гайд"
+    "designGuide": "Дизайн-гайд",
+    "blog": "Блог"
   },
   "footer": {
     "about": "О проекте",
@@ -17,6 +18,12 @@
     "whitepaper": "White Paper",
     "follow": "Следите за развитием проекта",
     "follow_text": "Мы делимся прогрессом в X и Telegram",
-    "copyright": "© 2025 Beresta Project. Все права защищены."
+    "copyright": "© Beresta Project. Все права защищены."
+  },
+  "form": {
+    "submit": "Отправить заявку",
+    "sending": "Отправляем…",
+    "error": "Не удалось отправить заявку. Попробуйте ещё раз или напишите contact@beresta.one.",
+    "rateLimit": "Слишком много заявок. Попробуйте через час или напишите contact@beresta.one."
   }
 }

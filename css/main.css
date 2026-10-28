@@ -613,26 +613,26 @@ body {
 .intro-section {
   position: relative;
   overflow: hidden;
-  padding: 80px 5%;
+  padding: 64px 4%;
   display: flex;
   align-items: center;
-  gap: 60px;
-  min-height: 480px;
-  background: #0a0a0a !important;
+  gap: 32px;
+  min-height: 420px;
+  background: #000 !important;
 }
 
-.intro-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('/img/intro-bg.png') center/cover no-repeat;
-  opacity: 0.35;
+.intro-copy {
+  flex: 1 1 42%;
+  max-width: 440px;
 }
 
-.intro-section > * {
-  position: relative;
-  z-index: 1;
-  max-width: 520px;
+.intro-device {
+  display: block;
+  flex: 1 1 58%;
+  width: 58%;
+  min-width: 0;
+  height: auto;
+  object-fit: contain;
 }
 
 /* ==========================================
@@ -791,6 +791,15 @@ body {
     flex-direction: column;
     min-height: auto;
     padding: 60px 5%;
+  }
+
+  .intro-copy {
+    max-width: none;
+  }
+
+  .intro-device {
+    flex: none;
+    width: 100%;
   }
 
   .main-nav {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Участие | Beresta</title>
   <meta name="description" content="Стань частью Бересты: тестер, разработчик, инвестор или амбассадор. Ранние участники получают токены BERS и приоритетный доступ.">
-  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/main.css?v=41683a33f276">
   <link rel="preload" href="/components/header.html" as="fetch">
   <link rel="preload" href="/components/footer.html" as="fetch">
   <style>
@@ -420,6 +420,17 @@
       }
     }
   </style>
+  <link rel="canonical" href="https://beresta.one/participation/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Beresta">
+  <meta property="og:title" content="Участие | Beresta">
+  <meta property="og:description" content="Стань частью Бересты: тестер, разработчик, инвестор или амбассадор. Ранние участники получают токены BERS и приоритетный доступ.">
+  <meta property="og:url" content="https://beresta.one/participation/">
+  <meta property="og:image" content="https://beresta.one/img/prototype.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Участие | Beresta">
+  <meta name="twitter:description" content="Стань частью Бересты: тестер, разработчик, инвестор или амбассадор. Ранние участники получают токены BERS и приоритетный доступ.">
+  <meta name="twitter:image" content="https://beresta.one/img/prototype.jpg">
 </head>
 <body>
   <div id="header-container"></div>
@@ -519,15 +530,16 @@
 
           <div class="participation-form">
             <div id="form-body">
-              <form id="partForm" action="https://formspree.io/f/contact@beresta.one" method="POST" onsubmit="handleFormSubmit(event)">
+              <form id="partForm" action="/api/participation" method="POST">
+                <div hidden aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
                 <div class="form-row">
                   <div class="form-group">
                     <label for="fname">Имя *</label>
-                    <input type="text" id="fname" name="name" placeholder="Иван" required>
+                    <input type="text" id="fname" name="name" placeholder="Иван" maxlength="100" autocomplete="name" required>
                   </div>
                   <div class="form-group">
                     <label for="femail">Email *</label>
-                    <input type="email" id="femail" name="email" placeholder="ivan@example.com" required>
+                    <input type="email" id="femail" name="email" placeholder="ivan@example.com" maxlength="254" autocomplete="email" required>
                   </div>
                 </div>
 
@@ -544,20 +556,22 @@
 
                 <div class="form-group">
                   <label for="ftg">Telegram (необязательно)</label>
-                  <input type="text" id="ftg" name="telegram" placeholder="@username">
+                  <input type="text" id="ftg" name="telegram" placeholder="@username" maxlength="100">
                 </div>
 
                 <div class="form-group">
                   <label for="fmsg">Расскажи о себе</label>
-                  <textarea id="fmsg" name="message" placeholder="Как ты можешь помочь проекту? Почему заинтересован?"></textarea>
+                  <textarea id="fmsg" name="message" placeholder="Как ты можешь помочь проекту? Почему заинтересован?" maxlength="2000"></textarea>
                 </div>
 
-                <button type="submit" class="form-submit">Отправить заявку</button>
-                <p class="form-note">Не продаем и не передаем данные третьим лицам. Только связь по проекту.</p>
+                <p id="form-error" role="alert" tabindex="-1" hidden></p>
+                <button type="submit" class="form-submit" data-i18n="form.submit">Отправить заявку</button>
+                <p class="form-note">Заявка будет отправлена команде Бересты в Telegram. Данные используем только для связи по проекту.</p>
+                <noscript><p>Для отправки формы включите JavaScript или напишите <a href="mailto:contact@beresta.one">contact@beresta.one</a>.</p></noscript>
               </form>
             </div>
 
-            <div class="form-success" id="form-success">
+            <div class="form-success" id="form-success" role="status" tabindex="-1" hidden>
               <div class="form-success__icon">🎉</div>
               <h3>Заявка принята!</h3>
               <p>Мы свяжемся с тобой в течение 48 часов.<br>А пока — присоединяйся к нашему Telegram-каналу.</p>
@@ -590,26 +604,8 @@
     <div id="footer-container"></div>
   </div>
 
-  <script>
-    function handleFormSubmit(e) {
-      e.preventDefault();
-      const form = document.getElementById('partForm');
-      const data = new FormData(form);
-
-      fetch('https://formspree.io/f/contact@beresta.one', {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      }).then(res => {
-        document.getElementById('form-body').style.display = 'none';
-        document.getElementById('form-success').style.display = 'block';
-      }).catch(() => {
-        alert('Ошибка отправки. Напишите нам напрямую: contact@beresta.one');
-      });
-    }
-  </script>
-
-  <script src="/js/i18n.js" defer></script>
-  <script src="/js/loadComponents.js" defer></script>
+  <script src="/js/participation.js?v=9010dc1e9834" defer></script>
+  <script src="/js/i18n.js?v=43d6c6f32bb7" defer></script>
+  <script src="/js/loadComponents.js?v=a8954b2fa140" defer></script>
 </body>
 </html>

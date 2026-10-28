@@ -1,19 +1,41 @@
 RewriteEngine On
 
+ErrorDocument 404 /404.html
+
+# Never expose server settings or stored application data.
+<FilesMatch "(^\.|\.(?:env|log|cjs)$)">
+    Require all denied
+</FilesMatch>
+
+# Shared hosting uses PHP for participation; Node keeps the same API contract.
+RewriteRule ^api/participation/?$ api/participation.php [L]
+
+# Other device API routes require a running Node backend.
+<IfModule mod_proxy_http.c>
+    RewriteRule ^api/(.*)$ http://127.0.0.1:3000/api/$1 [P,L]
+    RewriteRule ^app/api/(.*)$ http://127.0.0.1:3000/api/$1 [P,L]
+</IfModule>
+RewriteRule ^app/api(?:/|$) - [F,L]
+
+# Redirect only actual client requests, never internal rewrites or component fetches.
+RewriteCond %{THE_REQUEST} \s/+index\.html[?\s] [NC]
+RewriteRule ^index\.html$ / [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+pages/(.+?)/index\.html[?\s] [NC]
+RewriteRule ^pages/(.+)/index\.html$ /$1/ [R=301,L]
+RewriteCond %{REQUEST_URI} !^/components/ [NC]
+RewriteCond %{DOCUMENT_ROOT}/pages/$1/index.html -f
+RewriteRule ^(.+)\.html$ /$1/ [R=301,L]
+
 # /app и /app/ — веб-приложение (не pages/app/)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^app/?$ app/index.html [L]
 
-# Обработка чистых URL: /slug/ → pages/slug/index.html
+# Clean URLs include nested blog articles, and only rewrite existing pages.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]+)/?$ pages/$1/index.html [L]
-
-# Редирект с .html
-RewriteCond %{REQUEST_URI} !^/components/ [NC]
-RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
-RewriteRule ^ /%1? [NC,L,R=301]
+RewriteCond %{DOCUMENT_ROOT}/pages/$1/index.html -f
+RewriteRule ^(.+?)/?$ pages/$1/index.html [L]
 
 # Кэширование статических файлов
 <IfModule mod_expires.c>

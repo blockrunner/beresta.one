@@ -21,7 +21,7 @@ async function loadComponents() {
     if (headerContainer) {
       console.log('Loading header into container');
       // Загрузка в контейнер (для основных страниц сайта)
-      const headerResponse = await fetch('/components/header.html');
+      const headerResponse = await fetch('/components/header.html', { cache: 'no-cache' });
       if (!headerResponse.ok) {
         throw new Error('Failed to load header: ' + headerResponse.status);
       }
@@ -31,7 +31,7 @@ async function loadComponents() {
     } else {
       console.log('Loading header into body');
       // Загрузка напрямую в body (для приложения)
-      const headerResponse = await fetch('/components/header.html');
+      const headerResponse = await fetch('/components/header.html', { cache: 'no-cache' });
       if (!headerResponse.ok) {
         throw new Error('Failed to load header: ' + headerResponse.status);
       }
@@ -41,16 +41,18 @@ async function loadComponents() {
     }
     
     // Загрузка футера
-    const footerResponse = await fetch('/components/footer.html');
+    const footerResponse = await fetch('/components/footer.html', { cache: 'no-cache' });
     if (!footerResponse.ok) {
       throw new Error('Failed to load footer: ' + footerResponse.status);
     }
     const footerData = await footerResponse.text();
-    document.body.insertAdjacentHTML('beforeend', footerData);
+    const footerContainer = document.getElementById('footer-container');
+    if (footerContainer) footerContainer.innerHTML = footerData;
+    else document.body.insertAdjacentHTML('beforeend', footerData);
     initFooter();
     
     // Применяем переводы
-    const savedLang = localStorage.getItem('lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en');
+    const savedLang = getPreferredLanguage();
     if (typeof loadLanguage === 'function') {
       loadLanguage(savedLang);
       console.log('Language applied:', savedLang);
@@ -70,6 +72,7 @@ function initHeader() {
   if (toggle && nav) {
     toggle.addEventListener('click', () => {
       nav.classList.toggle('active');
+      toggle.setAttribute('aria-expanded', String(nav.classList.contains('active')));
     });
   }
 
@@ -79,7 +82,7 @@ function initHeader() {
     langSwitcher.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
         const lang = e.target.dataset.lang;
-        localStorage.setItem('lang', lang);
+        try { localStorage.setItem('lang', lang); } catch { /* Storage may be disabled. */ }
         loadLanguage(lang);
       }
     });

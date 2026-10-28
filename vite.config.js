@@ -1,139 +1,70 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
-import fs from 'fs';
+import { resolve } from 'node:path';
+import fs from 'node:fs';
+import pages from './config/pages.cjs';
 
-// Функция для получения всех HTML файлов в pages/
-function getPages() {
-  const pages = {};
-  const pagesDir = resolve(__dirname, 'pages');
-  
-  if (fs.existsSync(pagesDir)) {
-    const dirs = fs.readdirSync(pagesDir, { withFileTypes: true })
-      .filter(dirent => dirent.isDirectory())
-      .map(dirent => dirent.name);
-    
-    dirs.forEach(dir => {
-      const indexPath = resolve(pagesDir, dir, 'index.html');
-      if (fs.existsSync(indexPath)) {
-        pages[dir] = indexPath;
-      }
-    });
-  }
-  
-  return pages;
+const root = __dirname;
+const staticFiles = [
+  'img', 'css', 'js', 'components', 'locales', 'shared', 'app/css', 'app/js',
+  'config/dev.config.js', 'config/prod.config.js', 'robots.txt', 'sitemap.xml',
+  'favicon.ico', 'favicon.svg', 'favicon-96x96.png', 'apple-touch-icon.png',
+  'android-chrome-192x192.png', 'site.webmanifest',
+  'web-app-manifest-192x192.png', 'web-app-manifest-512x512.png'
+];
+
+function cleanUrls(directory) {
+  return (req, res, next) => {
+    const url = new URL(req.url, 'http://localhost');
+    if (/^\/(?:api(?:\/|$)|app\/api(?:\/|$)|@|node_modules(?:\/|$))/.test(url.pathname)) return next();
+    const page = pages.resolvePage(directory, url.pathname);
+    if (page) {
+      req.url = `/${page.slice(directory.length + 1).replace(/\\/g, '/')}${url.search}`;
+      return next();
+    }
+    if (url.pathname.includes('.')) return next();
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.end(fs.readFileSync(resolve(directory, '404.html')));
+  };
 }
 
 export default defineConfig({
-  root: '.',
+  root,
   base: '/',
-  
+  publicDir: false,
+  appType: 'mpa',
   server: {
     port: 8100,
     host: '0.0.0.0',
-    open: false,
-    cors: true,
     proxy: {
-      '/app/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/app\/api/, '/api')
-      }
+      '/app/api': { target: 'http://localhost:3000', changeOrigin: true, rewrite: p => p.replace(/^\/app/, '') },
+      '/api': { target: 'http://localhost:3000', changeOrigin: true }
     }
   },
-
-  // Настройка для обработки красивых URL (MPA routing)
-  appType: 'mpa', // Multi-Page Application
-
-  preview: {
-    port: 8100,
-    host: '0.0.0.0',
-    cors: true
-  },
-
+  preview: { port: 8100, host: '0.0.0.0' },
   build: {
     outDir: 'dist',
-    assetsDir: 'assets',
     sourcemap: true,
     minify: 'terser',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        app: resolve(__dirname, 'app/index.html'),
-        ...getPages() // Добавляем все страницы из pages/
-      },
-      output: {
-        manualChunks: {
-          vendor: ['eslint', 'prettier']
+        main: resolve(root, 'index.html'),
+        app: resolve(root, 'app/index.html'),
+        notFound: resolve(root, '404.html'),
+        ...Object.fromEntries(Object.entries(pages.getPages(root)).map(([url, file]) => [url.slice(1, -1).replace(/\//g, '-'), file]))
+      }
+    }
+  },
+  plugins: [{
+    name: 'beresta-pages',
+    configureServer(server) { server.middlewares.use(cleanUrls(root)); },
+    configurePreviewServer(server) { server.middlewares.use(cleanUrls(resolve(root, 'dist'))); },
+    closeBundle() {
+      for (const file of staticFiles) {
+        if (fs.existsSync(resolve(root, file))) {
+          fs.cpSync(resolve(root, file), resolve(root, 'dist', file), { recursive: true });
         }
       }
     }
-  },
-
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './'),
-      '@app': resolve(__dirname, './app'),
-      '@site': resolve(__dirname, './site'),
-      '@shared': resolve(__dirname, './shared')
-    }
-  },
-
-  css: {
-    devSourcemap: true
-  },
-
-  optimizeDeps: {
-    include: ['eslint', 'prettier']
-  },
-
-  // Middleware для обработки красивых URL
-  plugins: [
-    {
-      name: 'clean-urls',
-      configureServer(server) {
-        server.middlewares.use((req, res, next) => {
-          const url = req.url;
-          
-          // Если это запрос к API, пропускаем
-          if (url.startsWith('/app/api') || url.startsWith('/api')) {
-            return next();
-          }
-          
-          // Если это статический файл (CSS, JS, изображения), пропускаем
-          if (url.includes('.') && !url.endsWith('/')) {
-            return next();
-          }
-          
-          // Проверяем, есть ли соответствующий HTML файл в pages/
-          const pages = getPages();
-          const pathSegments = url.split('/').filter(Boolean);
-          
-          // /app и /app/ — веб-приложение управления устройством
-          if (pathSegments.length === 1 && pathSegments[0] === 'app') {
-            req.url = '/app/index.html';
-            return next();
-          }
-          
-          if (pathSegments.length === 1) {
-            const pageName = pathSegments[0];
-            if (pages[pageName]) {
-              // Перенаправляем на соответствующий HTML файл
-              req.url = `/pages/${pageName}/index.html`;
-              return next();
-            }
-          }
-          
-          // Если это корневой путь или не найденная страница, показываем главную
-          if (url === '/' || url === '') {
-            req.url = '/index.html';
-            return next();
-          }
-          
-          // Для всех остальных случаев показываем главную страницу
-          req.url = '/index.html';
-          next();
-        });
-      }
-    }
-  ]
+  }]
 });
