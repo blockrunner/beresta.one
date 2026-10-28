@@ -29,6 +29,14 @@ jobs:
         sudo apt-get install -y sshpass
         sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
           "cd '$SSH_REMOTE_PATH' && printf 'HOSTING_INSPECTION\\n' && pwd && (command -v node || true) && (node --version || true) && (command -v php || true) && (php --version | head -1 || true) && (command -v pm2 || true) && (command -v passenger-config || true) && if [ -f .env ]; then printf 'ENV_EXISTS\\n'; fi && ls -d app/api 2>/dev/null"
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd '$SSH_REMOTE_PATH' && php" <<'PHP'
+        <?php
+        foreach (array('HOME' => getenv('HOME'), 'TEMP' => sys_get_temp_dir(), 'PARENT' => dirname(getcwd())) as $label => $directory) {
+            echo $label . '_PATH=' . $directory . "\n";
+            echo $label . '_WRITABLE=' . (is_writable($directory) ? 'yes' : 'no') . "\n";
+            echo $label . '_IS_SITE=' . (realpath($directory) === realpath(getcwd()) ? 'yes' : 'no') . "\n";
+        }
+        PHP
 
   deploy:
     if: github.event_name != 'workflow_dispatch' || inputs.mode != 'inspect'
